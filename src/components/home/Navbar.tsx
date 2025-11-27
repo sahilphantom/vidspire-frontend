@@ -7,11 +7,11 @@ export function Navbar() {
     <nav className="w-full border-b border-gray-custom bg-charcoal">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary-red flex items-center justify-center">
-            <span className="text-white font-bold text-xl">V</span>
-          </div>
-          <span className="text-xl font-extrabold font-heading">Vidspire</span>
+        <Link href="/" className="flex items-center ">
+          
+            <img src="/assets/vidspirelogo.png" alt="logo"  className="w-[50px] h-[40px]"/>
+         
+          <span className="text-xl font-bold font-heading">VidSpire</span>
         </Link>
 
         {/* Navigation Links */}
