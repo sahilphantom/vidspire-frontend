@@ -4,22 +4,22 @@ import ColorBends from "@/components/color-bends"
 
 export default function Hero() {
   return (
-    <section className="relative w-full bg-transparent  pt-20 pb-16 overflow-hidden min-h-screen flex items-center">
+    <section className="relative w-full bg-transparent  pt-32 pb-16 overflow-hidden min-h-screen flex items-center">
       <div className="absolute inset-0 z-0 w-full h-full">
       <ColorBends 
-    colors={["#B02E2B", "#B02E2B" ]}
+    colors={["#d6211e", "#d6211e",  ]}
       />
       </div>
 
        <div className="max-w-6xl mx-auto px-6 text-center relative z-10 w-full">
         {/* Version Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-custom/20 border border-gray-custom mb-8">
-          <span className="text-xs text-gray-400">v2.0 - Updated integrations</span>
+          <span className="text-xs text-gray-800">v2.0 - Updated integrations</span>
         </div>
 
         {/* Decorative Icons (floating) */}
         <div className="absolute left-[10%] top-[15%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -30,7 +30,7 @@ export default function Hero() {
         </div>
 
         <div className="absolute right-[12%] top-[12%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -41,7 +41,7 @@ export default function Hero() {
         </div>
 
         <div className="absolute left-[15%] bottom-[35%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -52,7 +52,7 @@ export default function Hero() {
         </div>
 
         <div className="absolute right-[10%] bottom-[30%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -63,7 +63,7 @@ export default function Hero() {
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-5xl md:text-7xl font-extrabold font-heading tracking-tight leading-tight">
+        <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight">
           Your ultimate solution 
           <br />
           {" "}
