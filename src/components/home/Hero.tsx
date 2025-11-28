@@ -64,11 +64,11 @@ export default function Hero() {
 
         {/* Main Headline */}
         <h1 className="text-5xl md:text-7xl font-extrabold font-heading tracking-tight leading-tight">
-          Organize your
+          Your ultimate solution 
           <br />
-          projects in{" "}
+          {" "}
           <span className="relative inline-block">
-            <span className="relative z-10">seconds</span>
+            <span className="relative z-10">Analytics</span>
             <span className="absolute bottom-1 left-0 w-full h-3 bg-green-400/30 -rotate-1"></span>
           </span>
         </h1>
