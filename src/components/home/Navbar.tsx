@@ -1,54 +1,64 @@
-"use client"
+"use client";
 
-import Link from "next/link"
+import Link from "next/link";
+import { Sun, Waypoints } from "lucide-react"; // Waypoints used as a placeholder for the logo icon
 
 export function Navbar() {
+  const navLinks = [
+    { name: "Pricing", href: "#" },
+    { name: "About", href: "#" },
+    { name: "Careers", href: "#" },
+    { name: "Blog", href: "#" },
+  ];
+
   return (
-    <nav className="w-full border-b border-gray-custom bg-charcoal">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center ">
-          
-            <img src="/assets/vidspirelogo.png" alt="logo"  className="w-[50px] h-[40px]"/>
-         
-          <span className="text-xl font-bold font-heading">VidSpire</span>
-        </Link>
+    <div className="flex justify-center w-full fixed top-4 z-50 px-4 ">
+      <nav className="flex items-center justify-between w-full max-w-5xl rounded-full border border-gray-200 bg-white/80 backdrop-blur-md py-3 px-6 shadow-sm">
+        
+        {/* Left: Logo */}
+        <div className="flex items-center gap-2">
+          {/* Custom Logo Icon attempting to match the image */}
+          <div className="text-black">
+            <Waypoints className="h-6 w-6" strokeWidth={2.5} />
+          </div>
+          <span className="text-xl font-semibold tracking-tight text-gray-900">
+            Notus
+          </span>
+        </div>
 
-        {/* Navigation Links */}
+        {/* Center: Navigation Links (Hidden on small screens) */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-sm hover:text-primary-red transition-colors">
-            Homepage
-          </Link>
-          <Link href="/about" className="text-sm hover:text-primary-red transition-colors">
-            About us
-          </Link>
-          <Link href="/features" className="text-sm hover:text-primary-red transition-colors">
-            Features
-          </Link>
-          <Link href="/blog" className="text-sm hover:text-primary-red transition-colors">
-            Blog
-          </Link>
-          <Link href="/contact" className="text-sm hover:text-primary-red transition-colors">
-            Contact us
-          </Link>
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              {link.name}
+            </Link>
+          ))}
         </div>
 
-        {/* CTA Buttons */}
+        {/* Right: Actions */}
         <div className="flex items-center gap-4">
-          <Link 
-            href="/demo" 
-            className="px-5 py-2 text-sm font-medium hover:bg-gray-custom/20 transition-colors border border-gray-custom"
+          {/* Theme Toggle */}
+          <button
+            type="button"
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="Toggle theme"
           >
-            Watch Demo
-          </Link>
-          <Link 
-            href="/signup" 
-            className="px-5 py-2 text-sm font-bold bg-primary-red hover:brightness-110 transition-all"
+            <Sun className="h-5 w-5" />
+          </button>
+
+          {/* CTA Button */}
+          <Link
+            href="#"
+            className="bg-[#1C1C1C] text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-gray-800 transition-colors"
           >
-            Start for free
+            Start building
           </Link>
         </div>
-      </div>
-    </nav>
-  )
+      </nav>
+    </div>
+  );
 }
