@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 // Utility function to concatenate class names
 const cn = (...classes: (string | undefined | null | boolean)[]): string => 
-  classes.filter(Boolean).join(" ");
+  classes.filter(Boolean).join(" ")
 
 interface ElegantShapeProps {
   className?: string;
