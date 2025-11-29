@@ -1,6 +1,8 @@
 "use client"
 
 import ColorBends from "@/components/color-bends"
+import { LayoutTextFlip } from "../ui/layout-text-flip"
+import { motion } from "motion/react"
 
 export default function Hero() {
   return (
@@ -17,7 +19,7 @@ export default function Hero() {
           <span className="text-xs text-gray-800">v2.0 - Updated integrations</span>
         </div>
 
-        {/* Decorative Icons (floating) */}
+        {/* Decorative Icons (floating)
         <div className="absolute left-[10%] top-[15%] w-8 h-8 opacity-60">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
             <path
@@ -60,31 +62,24 @@ export default function Hero() {
               d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
             />
           </svg>
-        </div>
+        </div> */}
 
-        {/* Main Headline */}
-        <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight">
-          Your ultimate solution 
-          <br />
-          {" "}
-          <span className="relative inline-block">
-            <span className="relative z-10">Analytics</span>
-            <span className="absolute bottom-1 left-0 w-full h-3 bg-green-400/30 -rotate-1"></span>
-          </span>
-        </h1>
-
-        {/* Subheadline */}
-        <p className="mt-6 text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          Revolutionize product management. Boost productivity effortlessly.
-          <br />
-          Take control and elevate your workflow with us.
-        </p>
+        <motion.div className="relative mx-4 my-4 flex flex-col items-center justify-center gap-4 text-center sm:mx-0 sm:mb-0 sm:flex-row">
+        <LayoutTextFlip
+          text="Welcome to "
+          words={["Aceternity UI", "Fight Club", "The Matrix", "The Jungle"]}
+        />
+      </motion.div>
+      <p className="mt-4 text-center text-base text-gray-800 ">
+        Experience the power of modern UI components that bring your ideas to
+        life.
+      </p>
 
         {/* CTA Button */}
         <div className="mt-10">
           <a
             href="/signup"
-            className="inline-block px-8 py-3 bg-primary-red text-black font-bold text-sm hover:brightness-110 transition-all"
+            className="inline-block bg-[#d6211e] text-white  px-8 py-3 rounded-full font-bold text-sm hover:brightness-110 transition-all"
           >
             Start for free
           </a>
@@ -92,7 +87,7 @@ export default function Hero() {
 
         {/* Dashboard Preview */}
         <div className="mt-20 rounded-lg border border-gray-custom bg-jet shadow-2xl p-2 neon-glow">
-          <img src="/dashboard-preview.png" alt="Vidspire Dashboard" className="rounded w-full" />
+          <img src="/assets/advanced.jpg" alt="Vidspire Dashboard" className="rounded w-full" />
         </div>
       </div>
     </section>

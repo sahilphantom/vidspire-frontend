@@ -55,6 +55,13 @@ export function Navbar() {
           {/* CTA Button */}
           <Link
             href="#"
+            className="border-[#d6211e] border-2 text-black rounded-full text-sm font-medium px-5 py-2   transition-colors"
+          >
+            Watch Demo
+          </Link>
+
+          <Link
+            href="#"
             className="bg-[#d6211e] text-white text-sm font-medium px-5 py-2.5 rounded-full  transition-colors"
           >
             Start for Free
