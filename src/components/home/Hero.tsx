@@ -55,15 +55,15 @@ export default function Hero() {
         <HeroGeometric />
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 text-center relative z-10 w-full">
+    <div className="max-w-6xl mx-auto px-6 text-center relative z-10 w-full">
         
-        {/* Interactive Gradient Badge - FIXED */}
+        {/* Interactive Gradient Badge */}
         <div ref={badgeRef} className="mb-6 invisible flex justify-center">
           <HoverBorderGradient
             containerClassName="rounded-full"
-            className="bg-white text-black flex items-center space-x-2"
+            // Ensure badge text is dark compatible
+            className="bg-white dark:bg-black text-black dark:text-white flex items-center space-x-2"
           >
-            {/* Small dot using your brand color */}
             <span className="w-1.5 h-1.5 rounded-full bg-[#E55A52] inline-block mr-2" />
             <span className="text-xs font-medium">v2.0 - Updated integrations</span>
           </HoverBorderGradient>
@@ -71,45 +71,47 @@ export default function Hero() {
 
         {/* Main Headline */}
         <div ref={titleRef} className="invisible">
-            <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight">
+            {/* Added dark:text-white to h1 */}
+            <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight text-gray-900 dark:text-white">
             Your ultimate solution 
             <br />
             {" "}
             <span className="relative inline-block">
-                {/* Main Text with Gradient */}
-                <span className="relative z-10 bg-gradient-to-r from-[#E55A52] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent font-semibold text-6xl tracking-tight">
-                Advanced
-                </span>
-                
-                {/* The Curved Underline (SVG) */}
-                <svg 
-                className="absolute -bottom-2 left-0 w-full h-4" 
-                viewBox="0 0 200 15" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="none"
-                >
-                <defs>
-                    <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#E55A52" />
-                    <stop offset="50%" stopColor="#C83E3A" />
-                    <stop offset="100%" stopColor="#B02E2B" />
-                    </linearGradient>
-                </defs>
-                
-                <path 
-                    d="M2 12 Q 100 2 198 12" 
-                    stroke="url(#gradient-line)" 
-                    strokeWidth="4" 
-                    strokeLinecap="round"
-                />
-                </svg>
-            </span>
+  {/* Main Text with Gradient */}
+  <span className="relative z-10 bg-gradient-to-r from-[#E55A52] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent font-semibold text-6xl tracking-tight">
+    Advanced
+  </span>
+  
+  {/* The Curved Underline (SVG) with Matching Gradient */}
+  <svg 
+    className="absolute -bottom-2 left-0 w-full h-4" 
+    viewBox="0 0 200 15" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="none"
+  >
+    <defs>
+      <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#E55A52" />
+        <stop offset="50%" stopColor="#C83E3A" />
+        <stop offset="100%" stopColor="#B02E2B" />
+      </linearGradient>
+    </defs>
+    
+    <path 
+      d="M2 12 Q 100 2 198 12" 
+      stroke="url(#gradient-line)" 
+      strokeWidth="4" 
+      strokeLinecap="round"
+    />
+  </svg>
+</span>
             </h1>
         </div>
 
         {/* Subheadline */}
-        <p ref={subheadRef} className="invisible mt-6 text-base md:text-lg text-gray-800 max-w-2xl mx-auto leading-relaxed">
+        {/* Added dark:text-gray-300 */}
+        <p ref={subheadRef} className="invisible mt-6 text-base md:text-lg text-gray-800 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           Revolutionize product management. Boost productivity effortlessly.
           <br />
           Take control and elevate your workflow with us.
