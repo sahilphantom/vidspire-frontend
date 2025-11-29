@@ -1,100 +1,135 @@
-"use client"
-
-import ColorBends from "@/components/color-bends"
+"use client";
+import React, { useLayoutEffect, useRef } from "react";
+import gsap from "gsap"; // Ensure you have gsap installed
+import HeroGeometric from "../HeroGeometry";
+import { HoverBorderGradient } from "../ui/hover-border-gradient";
 
 export default function Hero() {
+  const comp = useRef(null);
+  const badgeRef = useRef(null);
+  const titleRef = useRef(null);
+  const subheadRef = useRef(null);
+  const ctaRef = useRef(null);
+  const dashRef = useRef(null);
+
+  useLayoutEffect(() => {
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      tl.from(badgeRef.current, {
+        y: -20,
+        autoAlpha: 0, // This removes the 'invisible' class automatically
+        duration: 0.8,
+      })
+      .from(titleRef.current, {
+        y: 30,
+        autoAlpha: 0,
+        duration: 0.8,
+      }, "-=0.4")
+      .from(subheadRef.current, {
+        y: 20,
+        autoAlpha: 0,
+        duration: 0.8,
+      }, "-=0.6")
+      .from(ctaRef.current, {
+        y: 20,
+        autoAlpha: 0,
+        duration: 0.8,
+      }, "-=0.6")
+      .from(dashRef.current, {
+        y: 50,
+        autoAlpha: 0,
+        duration: 1,
+      }, "-=0.6");
+
+    }, comp);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative w-full bg-transparent  pt-32 pb-16 overflow-hidden min-h-screen flex items-center">
-      <div className="absolute inset-0 z-0 w-full h-full">
-      <ColorBends 
-    colors={["#d6211e", "#d6211e",  ]}
-      />
+    <section ref={comp} className="relative w-full bg-transparent pt-32 pb-16 overflow-hidden min-h-screen flex items-center">
+      
+      {/* Background Geometry */}
+      <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
+        <HeroGeometric />
       </div>
 
-       <div className="max-w-6xl mx-auto px-6 text-center relative z-10 w-full">
-        {/* Version Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-custom/20 border border-gray-custom mb-8">
-          <span className="text-xs text-gray-800">v2.0 - Updated integrations</span>
+      <div className="max-w-6xl mx-auto px-6 text-center relative z-10 w-full">
+        
+        {/* Interactive Gradient Badge - FIXED */}
+        <div ref={badgeRef} className="mb-6 invisible flex justify-center">
+          <HoverBorderGradient
+            containerClassName="rounded-full"
+            className="bg-white text-black flex items-center space-x-2"
+          >
+            {/* Small dot using your brand color */}
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E55A52] inline-block mr-2" />
+            <span className="text-xs font-medium">v2.0 - Updated integrations</span>
+          </HoverBorderGradient>
         </div>
-
-        {/* Decorative Icons (floating)
-        <div className="absolute left-[10%] top-[15%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-
-        <div className="absolute right-[12%] top-[12%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-        </div>
-
-        <div className="absolute left-[15%] bottom-[35%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-        </div>
-
-        <div className="absolute right-[10%] bottom-[30%] w-8 h-8 opacity-60">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#d6211e">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-            />
-          </svg>
-        </div> */}
 
         {/* Main Headline */}
-        <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight">
-          Your ultimate solution 
-          <br />
-          {" "}
-          <span className="relative inline-block">
-            <span className="relative z-10">Analytics</span>
-            <span className="absolute bottom-1 left-0 w-full h-3 bg-green-400/30 -rotate-1"></span>
-          </span>
-        </h1>
+        <div ref={titleRef} className="invisible">
+            <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight">
+            Your ultimate solution 
+            <br />
+            {" "}
+            <span className="relative inline-block">
+                {/* Main Text with Gradient */}
+                <span className="relative z-10 bg-gradient-to-r from-[#E55A52] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent font-semibold text-6xl tracking-tight">
+                Advanced
+                </span>
+                
+                {/* The Curved Underline (SVG) */}
+                <svg 
+                className="absolute -bottom-2 left-0 w-full h-4" 
+                viewBox="0 0 200 15" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="none"
+                >
+                <defs>
+                    <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#E55A52" />
+                    <stop offset="50%" stopColor="#C83E3A" />
+                    <stop offset="100%" stopColor="#B02E2B" />
+                    </linearGradient>
+                </defs>
+                
+                <path 
+                    d="M2 12 Q 100 2 198 12" 
+                    stroke="url(#gradient-line)" 
+                    strokeWidth="4" 
+                    strokeLinecap="round"
+                />
+                </svg>
+            </span>
+            </h1>
+        </div>
 
         {/* Subheadline */}
-        <p className="mt-6 text-base md:text-lg text-gray-800 max-w-2xl mx-auto leading-relaxed">
+        <p ref={subheadRef} className="invisible mt-6 text-base md:text-lg text-gray-800 max-w-2xl mx-auto leading-relaxed">
           Revolutionize product management. Boost productivity effortlessly.
           <br />
           Take control and elevate your workflow with us.
         </p>
 
         {/* CTA Button */}
-        <div className="mt-10">
+        <div ref={ctaRef} className="invisible mt-10">
           <a
             href="/signup"
-            className="inline-block bg-[#d6211e] text-white  px-8 py-3 rounded-full font-bold text-sm hover:brightness-110 transition-all"
+            className="inline-block bg-[#d6211e] text-white px-8 py-3 rounded-full font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-red-500/20"
           >
             Start for free
           </a>
         </div>
 
         {/* Dashboard Preview */}
-        <div className="mt-20 rounded-lg border border-gray-custom bg-jet shadow-2xl p-2 neon-glow">
+        <div ref={dashRef} className="invisible mt-20 rounded-lg border border-gray-200 bg-white shadow-2xl p-2">
           <img src="/assets/advanced.jpg" alt="Vidspire Dashboard" className="rounded w-full" />
         </div>
       </div>
     </section>
-  )
+  );
 }

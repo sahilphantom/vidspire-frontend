@@ -34,7 +34,7 @@ export function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+              className="text-sm font-medium text-gray-800 hover:text-gray-900 transition-colors"
             >
               {link.name}
             </Link>
@@ -46,7 +46,7 @@ export function Navbar() {
           {/* Theme Toggle */}
           <button
             type="button"
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-600 hover:text-gray-700 transition-colors"
             aria-label="Toggle theme"
           >
             <Sun className="h-5 w-5" />
