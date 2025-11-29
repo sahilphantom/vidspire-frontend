@@ -3,7 +3,6 @@ import React, { useLayoutEffect, useRef } from "react";
 import gsap from "gsap"; // Ensure you have gsap installed
 import HeroGeometric from "../HeroGeometry";
 import { HoverBorderGradient } from "../ui/hover-border-gradient";
-import ColorBends from "../color-bends";
 
 export default function Hero() {
   const comp = useRef(null);
