@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { ReactNode } from "react";
 
 // Utility function to concatenate class names
 const cn = (...classes: (string | undefined | null | boolean)[]): string => 
