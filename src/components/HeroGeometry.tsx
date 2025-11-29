@@ -121,13 +121,13 @@ export default function HeroGeometric({ badge = "MERN Developer" }) {
         - Light Mode: bg-white/50 + gradient to white at bottom
         - Dark Mode: dark:bg-black/50 + gradient to black at bottom
       */}
-      <div className={cn(
-        "absolute inset-0 pointer-events-none",
-        // Light Mode Styles
-        "bg-white/30 bg-gradient-to-t from-white via-white/50 to-transparent",
-        // Dark Mode Styles
-        "dark:bg-black/50 dark:bg-gradient-to-t dark:from-black dark:via-black/50 dark:to-transparent"
-      )} />
+     <div className={cn(
+  "absolute inset-0 pointer-events-none",
+  // Light Mode - subtle white overlay from bottom to top
+  "bg-gradient-to-t from-white/60 via-white/20 to-transparent",
+  // Dark Mode - subtle dark overlay from bottom to top  
+  "dark:bg-gradient-to-t dark:from-black/80 dark:via-black/60 dark:to-black/60"
+)} />
 
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center">
