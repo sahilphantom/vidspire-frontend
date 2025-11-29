@@ -57,14 +57,14 @@ export function Navbar() {
           {/* Buttons */}
           <Link
             href="#"
-            className="hidden sm:block border-[#d6211e] border-2 text-black dark:text-white rounded-full text-sm font-medium px-5 py-2 hover:bg-[#d6211e]/10 transition-colors"
+            className="hidden sm:block border-[#B02E2B] border-2 text-black dark:text-white rounded-full text-sm font-medium px-5 py-2 hover:bg-[#d6211e]/10 transition-colors"
           >
             Watch Demo
           </Link>
 
           <Link
             href="#"
-            className="bg-[#d6211e] text-white text-sm font-medium px-5 py-2.5 rounded-full hover:brightness-110 transition-colors shadow-[0_0_15px_rgba(214,33,30,0.5)]"
+            className="bg-linear-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] text-white text-sm font-medium px-5 py-2.5 rounded-full hover:brightness-110 transition-colors shadow-[0_0_15px_rgba(214,33,30,0.5)]"
           >
             Start for Free
           </Link>

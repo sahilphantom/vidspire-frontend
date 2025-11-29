@@ -64,7 +64,7 @@ function ElegantShape({
             "backdrop-blur-[2px] border-2 border-white/[0.15]",
             "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
             "after:absolute after:inset-0 after:rounded-full",
-            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]",
+            "after:bg-[radial-gradient(circle_at_80%_50%,rgba(255,255,255,0.2),transparent_0%)]",
           )}
         />
       </motion.div>
@@ -100,7 +100,7 @@ export default function HeroGeometric({ badge = "MERN Developer" }: HeroGeometri
           width={600}
           height={140}
           rotate={12}
-          gradient="from-[#d6211e]"
+          gradient="from-[#B02E2B]"
           className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
         />
         <ElegantShape
@@ -108,7 +108,7 @@ export default function HeroGeometric({ badge = "MERN Developer" }: HeroGeometri
           width={500}
           height={120}
           rotate={-15}
-          gradient="from-[#d6211e]"
+          gradient="from-[#B02E2B]"
           className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
         />
         <ElegantShape
@@ -116,7 +116,7 @@ export default function HeroGeometric({ badge = "MERN Developer" }: HeroGeometri
           width={300}
           height={80}
           rotate={-8}
-          gradient="from-[#d6211e]"
+          gradient="from-[#B02E2B]"
           className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
         />
         <ElegantShape
@@ -124,7 +124,7 @@ export default function HeroGeometric({ badge = "MERN Developer" }: HeroGeometri
           width={200}
           height={60}
           rotate={20}
-          gradient="from-[#d6211e]"
+          gradient="from-[#B02E2B]"
           className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
         />
         <ElegantShape
@@ -132,7 +132,7 @@ export default function HeroGeometric({ badge = "MERN Developer" }: HeroGeometri
           width={150}
           height={40}
           rotate={-25}
-          gradient="from-[#d6211e]"
+          gradient="from-[#B02E2B]"
           className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
         />
       </div>

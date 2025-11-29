@@ -52,11 +52,6 @@ export default function Hero() {
       
       {/* Background Geometry */}
       <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
-       {/* <ColorBends
-  colors={["#d6211e"]}
-   rotation={30}
-  
-/> */}
 
         <HeroGeometric />
       </div>
@@ -68,9 +63,9 @@ export default function Hero() {
           <HoverBorderGradient
             containerClassName="rounded-full"
             // Ensure badge text is dark compatible
-            className="bg-white dark:bg-black text-black dark:text-white flex items-center space-x-2"
+            className="bg-white border-[#B02E2B] border-2 dark:bg-black text-black dark:text-white flex items-center space-x-2"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E55A52] inline-block mr-2" />
+            <span className="w-2 h-2 rounded-full bg-[#B02E2B] inline-block mr-2" />
             <span className="text-xs font-medium">v2.0 - Updated integrations</span>
           </HoverBorderGradient>
         </div>
@@ -127,7 +122,7 @@ export default function Hero() {
         <div ref={ctaRef} className="invisible mt-10">
           <a
             href="/signup"
-            className="inline-block bg-[#d6211e] text-white px-8 py-3 rounded-full font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-red-500/20"
+            className="inline-block bg-linear-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] text-white px-8 py-3 rounded-full font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-red-500/20"
           >
             Start for free
           </a>

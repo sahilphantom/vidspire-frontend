@@ -36,17 +36,17 @@ export function HoverBorderGradient({
 
   // UPDATED: Using your brand color #E55A52 for the moving border spotlight
   const movingMap: Record<Direction, string> = {
-    TOP: "radial-gradient(20.7% 50% at 50% 0%, #E55A52 0%, rgba(255, 255, 255, 0) 100%)",
-    LEFT: "radial-gradient(16.6% 43.1% at 0% 50%, #E55A52 0%, rgba(255, 255, 255, 0) 100%)",
+    TOP: "radial-gradient(20.7% 50% at 50% 0%, #d61800 0%, rgba(255, 255, 255, 0) 100%)",
+    LEFT: "radial-gradient(16.6% 43.1% at 0% 50%, #d61800 0%, rgba(255, 255, 255, 0) 100%)",
     BOTTOM:
-      "radial-gradient(20.7% 50% at 50% 100%, #E55A52 0%, rgba(255, 255, 255, 0) 100%)",
+      "radial-gradient(20.7% 50% at 50% 100%, #d61800 0%, rgba(255, 255, 255, 0) 100%)",
     RIGHT:
-      "radial-gradient(16.2% 41.199999999999996% at 100% 50%, #E55A52 0%, rgba(255, 255, 255, 0) 100%)",
+      "radial-gradient(16.2% 41.199999999999996% at 100% 50%, #d61800 0%, rgba(255, 255, 255, 0) 100%)",
   };
 
   // UPDATED: Using your darker brand color #B02E2B for the hover state
   const highlight =
-    "radial-gradient(75% 181.15942028985506% at 50% 50%, #B02E2B 0%, rgba(255, 255, 255, 0) 100%)";
+    "radial-gradient(75% 181.15942028985506% at 50% 50%, #d61800 0%, rgba(255, 255, 255, 0) 100%)";
 
   useEffect(() => {
     if (!hovered) {
@@ -63,7 +63,7 @@ export function HoverBorderGradient({
       onMouseLeave={() => setHovered(false)}
       className={cn(
         // Changed bg-black/20 to bg-gray-200/30 for light mode compatibility
-        "relative flex rounded-full border border-transparent content-center bg-gray-200/30 hover:bg-gray-200/40 transition duration-500 items-center flex-col flex-nowrap gap-10 h-min justify-center overflow-visible p-px decoration-clone w-fit",
+        "relative flex rounded-full border border-transparent content-center  transition duration-500 items-center flex-col flex-nowrap gap-10 h-min justify-center overflow-visible p-px decoration-clone w-fit",
         containerClassName
       )}
       {...props}
