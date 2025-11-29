@@ -1,8 +1,6 @@
 "use client"
 
 import ColorBends from "@/components/color-bends"
-import { LayoutTextFlip } from "../ui/layout-text-flip"
-import { motion } from "motion/react"
 
 export default function Hero() {
   return (
@@ -64,16 +62,23 @@ export default function Hero() {
           </svg>
         </div> */}
 
-        <motion.div className="relative mx-4 my-4 flex flex-col items-center justify-center gap-4 text-center sm:mx-0 sm:mb-0 sm:flex-row">
-        <LayoutTextFlip
-          text="Welcome to "
-          words={["Aceternity UI", "Fight Club", "The Matrix", "The Jungle"]}
-        />
-      </motion.div>
-      <p className="mt-4 text-center text-base text-gray-800 ">
-        Experience the power of modern UI components that bring your ideas to
-        life.
-      </p>
+        {/* Main Headline */}
+        <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight">
+          Your ultimate solution 
+          <br />
+          {" "}
+          <span className="relative inline-block">
+            <span className="relative z-10">Analytics</span>
+            <span className="absolute bottom-1 left-0 w-full h-3 bg-green-400/30 -rotate-1"></span>
+          </span>
+        </h1>
+
+        {/* Subheadline */}
+        <p className="mt-6 text-base md:text-lg text-gray-800 max-w-2xl mx-auto leading-relaxed">
+          Revolutionize product management. Boost productivity effortlessly.
+          <br />
+          Take control and elevate your workflow with us.
+        </p>
 
         {/* CTA Button */}
         <div className="mt-10">
