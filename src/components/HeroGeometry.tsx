@@ -1,9 +1,27 @@
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
+import { ReactNode } from "react";
 
 // Utility function to concatenate class names
-const cn = (...classes) => classes.filter(Boolean).join(" ")
+const cn = (...classes: (string | undefined | null | boolean)[]): string => 
+  classes.filter(Boolean).join(" ");
 
-function ElegantShape({ className, delay = 0, width = 400, height = 100, rotate = 0, gradient = "from-white/[0.08]" }) {
+interface ElegantShapeProps {
+  className?: string;
+  delay?: number;
+  width?: number;
+  height?: number;
+  rotate?: number;
+  gradient?: string;
+}
+
+function ElegantShape({ 
+  className, 
+  delay = 0, 
+  width = 400, 
+  height = 100, 
+  rotate = 0, 
+  gradient = "from-white/[0.08]" 
+}: ElegantShapeProps) {
   return (
     <motion.div
       initial={{
@@ -55,10 +73,14 @@ function ElegantShape({ className, delay = 0, width = 400, height = 100, rotate 
   )
 }
 
-export default function HeroGeometric({ badge = "MERN Developer" }) {
+interface HeroGeometricProps {
+  badge?: string;
+}
+
+export default function HeroGeometric({ badge = "MERN Developer" }: HeroGeometricProps) {
   const fadeUpVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: (i) => ({
+    visible: (i: number) => ({
       opacity: 1,
       y: 0,
       transition: {

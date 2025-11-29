@@ -28,7 +28,7 @@ export function ThemeToggle() {
     >
       {/* Moving Circle (The Thumb) */}
       <motion.div
-        className="w-6 h-6 bg-gradient-to-br from-[#d6211e] to-[#B02E2B] rounded-full shadow-md z-10 flex items-center justify-center"
+        className="w-6 h-6 bg-linear-to-br from-[#d6211e] to-[#B02E2B] rounded-full shadow-md z-10 flex items-center justify-center"
         layout
         transition={{ type: "spring", stiffness: 700, damping: 30 }}
         animate={{

@@ -85,7 +85,7 @@ export default function Hero() {
             {" "}
             <span className="relative inline-block">
   {/* Main Text with Gradient */}
-  <span className="relative z-10 bg-gradient-to-r from-[#E55A52] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent font-semibold text-6xl tracking-tight">
+  <span className="relative z-10 bg-linear-to-r from-[#E55A52] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent font-semibold text-6xl tracking-tight">
     Advanced
   </span>
   
