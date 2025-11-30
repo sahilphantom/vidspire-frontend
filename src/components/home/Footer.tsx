@@ -12,8 +12,8 @@ const Footer: React.FC = () => {
   const resourceLinks: string[] = ["Blog", "Case Studies", "Help Center", "API Docs"];
 
   return (
-    <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-zinc-800 pt-20 pb-10 transition-colors duration-300">
-      <div className="container mx-auto px-6 md:px-12 max-w-7xl">
+    <footer className="w-[100%] m-auto bg-white dark:bg-black border-t border-gray-200 dark:border-zinc-800 pt-20 pb-10 transition-colors duration-300">
+      <div className="container mx-auto px-6 max-w-7xl">
         {/* Top Section: 4-Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           

@@ -117,12 +117,12 @@ const FAQSection: React.FC = () => {
 
   return (
     // Section Background: White (Light) -> Black (Dark)
-    <section className="w-[95%] m-auto py-24 bg-white dark:bg-black relative overflow-hidden transition-colors duration-300">
+    <section className=" py-24 bg-white dark:bg-black relative overflow-hidden transition-colors duration-300">
       
       {/* Subtle Background Glow Effect */}
-      <div className="absolute bottom-0 right-0 translate-y-1/2 translate-x-1/2 w-[800px] h-[800px] bg-[#d6211e] opacity-[0.05] dark:opacity-[0.08] blur-[150px] rounded-full pointer-events-none" />
+      {/* <div className="absolute bottom-0 right-0 translate-y-1/2 translate-x-1/2 w-[800px] h-[800px] bg-[#d6211e] opacity-[0.05] dark:opacity-[0.08] blur-[150px] rounded-full pointer-events-none" /> */}
 
-      <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
+      <div className="container mx-auto px-3 md:px-12 max-w-7xl relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
           
           {/* Left Column: Heading & CTA */}
