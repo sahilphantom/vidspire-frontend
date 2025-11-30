@@ -48,7 +48,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section ref={comp} className="relative w-full bg-transparent pt-32 pb-16 overflow-hidden min-h-screen flex items-center">
+    <section ref={comp} className="relative w-full bg-transparent pt-32  overflow-hidden min-h-screen flex items-center">
       
       {/* Background Geometry */}
       <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
@@ -56,14 +56,14 @@ export default function Hero() {
         <HeroGeometric />
       </div>
 
-    <div className="max-w-6xl mx-auto px-6 text-center relative z-10 w-full">
+    <div className="max-w-6xl mx-auto px-6 bg-transparent text-center relative z-10 w-full">
         
         {/* Interactive Gradient Badge */}
         <div ref={badgeRef} className="mb-6 invisible flex justify-center">
           <HoverBorderGradient
             containerClassName="rounded-full"
             // Ensure badge text is dark compatible
-            className="bg-white border-[#B02E2B] border-2 dark:bg-black text-black dark:text-white flex items-center space-x-2"
+            className="bg-white border-[#B02E2B] border-1 dark:bg-black text-black dark:text-white flex items-center space-x-2"
           >
             <span className="w-2 h-2 rounded-full bg-[#B02E2B] inline-block mr-2" />
             <span className="text-xs font-medium">v2.0 - Updated integrations</span>
@@ -129,9 +129,9 @@ export default function Hero() {
         </div>
 
         {/* Dashboard Preview */}
-        <div ref={dashRef} className="invisible mt-20 rounded-lg border border-gray-200 bg-white shadow-2xl p-2">
-          <img src="/assets/advanced.jpg" alt="Vidspire Dashboard" className="rounded w-full" />
-        </div>
+        
+          <img src="/assets/advanced1.jpg" alt="Vidspire Dashboard" className="rounded shadow-lg  w-full h-full mt-20 object-cover" />
+       
       </div>
     </section>
   );
