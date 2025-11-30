@@ -111,6 +111,22 @@ export default function HeroGeometric({ badge = "MERN Developer" }: HeroGeometri
           gradient="from-[#B02E2B]"
           className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
         />
+         <ElegantShape
+          delay={0.6}
+          width={200}
+          height={60}
+          rotate={20}
+          gradient="from-[#B02E2B]"
+          className="right-[15%] md:right-[60%] top-[10%] md:top-[70%]"
+        />
+         <ElegantShape
+          delay={0.6}
+          width={200}
+          height={60}
+          rotate={20}
+          gradient="from-[#B02E2B]"
+          className="right-[15%] md:right-[20%] top-[10%] md:top-[70%]"
+        />
         <ElegantShape
           delay={0.4}
           width={300}
