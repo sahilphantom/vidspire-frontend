@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
                 className="w-20 h-20 -my-6 object-contain"
               />
               <span className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                VideSpire
+                Vidly
               </span>
             </Link>
             <p className="text-gray-600 dark:text-zinc-400 leading-relaxed pr-4">

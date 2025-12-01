@@ -48,7 +48,7 @@ export function Navbar() {
                 className="w-20 h-20 -my-6 object-contain"
               />
           <span className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-            VideSpire
+            Vidly
           </span>
          
         </div>
