@@ -79,7 +79,7 @@ export function Navbar() {
           </Link>
 
           <Link
-            href="#"
+            href="/dashboard"
             className="bg-gradient-to-r from-[#B02E2B] to-[#d6211e] text-white text-sm font-medium px-5 py-2.5 rounded-full hover:brightness-110 transition-all shadow-[0_0_15px_rgba(214,33,30,0.5)]"
           >
             Start for Free
@@ -127,7 +127,7 @@ export function Navbar() {
                 <Link
                   href="#"
                   onClick={() => setIsOpen(false)}
-                  className="w-full text-center border-[#B02E2B] border-2 text-black dark:text-white rounded-full text-sm font-medium px-5 py-3 hover:bg-[#d6211e]/10 transition-colors"
+                  className="w-full text-center border-[#B02E2B] border-2 text-black dark:text-white rounded-full text-sm font-medium px-5 py-3 "
                 >
                   Watch Demo
                 </Link>
@@ -135,7 +135,7 @@ export function Navbar() {
                 <Link
                   href="#"
                   onClick={() => setIsOpen(false)}
-                  className="w-full text-center bg-gradient-to-r from-[#B02E2B] to-[#d6211e] text-white text-sm font-medium px-5 py-3 rounded-full hover:brightness-110 transition-all shadow-[0_0_15px_rgba(214,33,30,0.5)]"
+                  className="w-full text-center bg-gradient-to-r from-[#B02E2B] to-[#d6211e] text-white text-sm font-medium px-5 py-3 rounded-full"
                 >
                   Start for Free
                 </Link>

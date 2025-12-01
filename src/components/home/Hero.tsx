@@ -122,7 +122,7 @@ export default function Hero() {
         <div ref={ctaRef} className="invisible mt-10">
           <a
             href="/signup"
-            className="inline-block bg-linear-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] text-white px-8 py-3 rounded-full font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-red-500/20"
+            className="inline-block bg-linear-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] text-white px-8 py-3 rounded-full font-bold text-sm "
           >
             Start for free
           </a>
