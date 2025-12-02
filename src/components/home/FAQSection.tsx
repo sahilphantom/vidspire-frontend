@@ -29,29 +29,29 @@ interface FAQItem {
 
 const faqData: FAQItem[] = [
   {
-    question: "What is VideSpire used for?",
+    question: "What exactly does your AI platform do?",
     answer:
-      "VideSpire is an AI-powered platform designed to help YouTube creators grow their channels. It analyzes comments, finds trending topics, validates video ideas, and provides deep channel analytics to help you make data-driven decisions.",
+      "Our platform analyzes your YouTube data — comments, topics, titles, thumbnails, competitors, and trends — and gives you clear, actionable insights. You get faster decisions, smarter content ideas, and higher-performing videos without wasting hours on manual research.",
   },
   {
-    question: "Can I upload as many contacts as I want?",
+    question: "How does your AI help my channel grow?",
     answer:
-      "While VideSpire focuses on YouTube channel growth and video analysis, our upcoming features may include tools for managing community interactions. Please check our pricing page for specific limits related to current features.",
+      "By automating the most time-consuming parts of content strategy: Finding viral topics, Understanding audience sentiment, Validating ideas before you film. You make better content faster and avoid low-performing videos.",
   },
   {
-    question: "What is a credit?",
+    question: "Is my channel data safe?",
     answer:
-      "Credits are used to perform AI analyses on our platform, such as deep comment analysis or video idea validation. Different actions consume different amounts of credits. You can view your credit usage in your dashboard.",
+      "Yes. Everything is protected with enterprise-grade encryption. We never sell, share, or expose your data — only you control it. Your analytics stay private and secure at all times.",
   },
   {
-    question: "Is my data secure with VideSpire?",
+    question: "Do I need any technical knowledge?",
     answer:
-      "Yes, we take data security very seriously. We use industry-standard encryption and security protocols to protect your account information and any data you analyze through our platform. We do not share your data with third parties.",
+      "Nope. The platform is built for creators, not engineers. If you can upload a video to YouTube, you can use this — it’s that simple.",
   },
   {
-    question: "How do I start using VideSpire?",
+    question: "Does your tool work for small channels?",
     answer:
-      "Getting started is easy! Simply sign up for a free account, connect your YouTube channel (optional, but recommended for personalized insights), and start exploring our features like the Topic Finder or Idea Validation tool.",
+      "Absolutely. Small channels benefit even more because our AI helps you spot opportunities bigger creators miss. You get: Low-competition topics, Underserved niches, High-potential content ideas, Perfect for fast early-stage growth.",
   },
 ];
 

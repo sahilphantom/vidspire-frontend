@@ -43,12 +43,12 @@ const ProblemSection: React.FC = () => {
     {
       icon: <Brain className="w-6 h-6 text-[#B02E2B]" />,
       title: 'Data Overload',
-      description: 'Businesses struggle to make sense of vast amounts of complex data, missing out on valuable insights that could drive growth and innovation.',
+      description: 'You’re drowning in analytics. Thousands of comments, trends, CTR graphs, retention charts… but no clear direction. Valuable insights slip through the cracks every single day.',
     },
     {
       icon: <Zap className="w-6 h-6 text-[#B02E2B]" />,
       title: 'Slow Decision-Making',
-      description: 'Traditional data processing methods are too slow, causing businesses to lag behind market changes and miss crucial opportunities.',
+      description: 'By the time you figure out what’s working, the trend is already gone. Manual processing keeps you behind competitors who move faster.',
     },
     {
       icon: <Shield className="w-6 h-6 text-[#B02E2B]" />,
@@ -63,7 +63,9 @@ const ProblemSection: React.FC = () => {
         <div className={`text-center ${spaceGrotesk.className} mb-12`}>
           <h2 className="text-xs font-semibold tracking-widest text-[#B02E2B] uppercase mb-4">PROBLEM</h2>
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
-            Manually entering your data is a hassle.
+           Manually handling your YouTube data is <br />
+           killing your growth.
+
           </h1>
         </div>
         <div className={`grid grid-cols-1 ${outfit.className} md:grid-cols-3 gap-8 text-left`}>

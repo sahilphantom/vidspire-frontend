@@ -88,13 +88,14 @@ export default function Hero() {
         <div ref={titleRef} className="invisible">
             {/* Added dark:text-white to h1 */}
             <h1 className={`text-5xl  md:text-7xl font-medium ${spaceGrotesk.className}  font-heading tracking-tight leading-tight text-gray-900 dark:text-white`}>
-            Your ultimate solution 
+           Your unfair advantage on YouTube, Creator-Grade
+
             <br />
             {" "}
             <span className="relative inline-block">
   {/* Main Text with Gradient */}
   <span className="relative z-10 bg-linear-to-r from-[#E55A52] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent font-semibold text-6xl tracking-tight">
-    Advanced
+    Intelligence
   </span>
   
   {/* The Curved Underline (SVG) with Matching Gradient */}
@@ -127,9 +128,10 @@ export default function Hero() {
         {/* Subheadline */}
         {/* Added dark:text-gray-300 */}
         <p ref={subheadRef} className={`invisible mt-6 ${outfit.className} text-base md:text-lg text-gray-800 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed`}>
-          Revolutionize product management. Boost productivity effortlessly.
+         Turn every comment, idea, and trend into data-backed clarity.
           <br />
-          Take control and elevate your workflow with us.
+          {/* Analyze audience sentiment, validate video ideas, and understand your viewers like never before — instantly. */}
+
         </p>
 
         {/* CTA Button */}

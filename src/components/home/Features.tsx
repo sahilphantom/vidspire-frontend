@@ -245,15 +245,22 @@ const FeaturesSection: React.FC = () => {
         <div className={`grid grid-cols-1 ${outfit.className} md:grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-8`}>
           {/* Row 1: Two Large Cards (Top Left & Top Right) */}
           <FeatureCard
-            title="AI Comment Analysis (Main Differentiator)"
+            title="AI Comment Analysis"
             visual={<Image src="/assets/ai-comment.png" alt="AI Comment Analysis" width={400} height={400} className="w-full h-full object-center object-contain p-2" />}
-            description="Get inside your viewers' heads. Our AI reads every comment to tell you exactly what they love, hate, and want to see next. Discover the emotions and patterns driving your channel's engagement."
+            description="Understand Your Audience Like Never Before
+Your comments aren’t noise - they’re data gold.
+Our AI breaks down every comment to reveal what viewers love, hate, share, and beg for next.
+Spot emotions, trends, hidden pain points, and viral triggers instantly.
+Turn casual viewers into superfans by giving them exactly what they want."
             className="lg:col-span-3"
             delay={0.1}
           />
           <FeatureCard
             title="Topic Finder"
-            description="Never run out of viral ideas. Analyze trends, competition, and search volume to find untapped topics with high potential. See why a topic is growing and how you can stand out."
+            description="Discover High-Potential, Low-Competition Ideas
+Never run out of viral topics again.
+Analyze keywords, trends, search volume, and competition in seconds.
+Find untapped opportunities before your competitors even see them."
             visual={<TopicFinderVisual />}
             className="lg:col-span-3"
             delay={0.2}
@@ -269,15 +276,25 @@ const FeaturesSection: React.FC = () => {
           />
           <FeatureCard
             title="Idea Validation"
-            description="Stop wasting time on bad videos. Instantly check competition, demand, and virality potential before you even start scripting."
+            description="Stop Wasting Time on Videos That Won’t Perform
+Before scripting or recording, check if your video idea has real potential.
+Our AI instantly tests:
+Competition
+Demand
+Virality signs
+Viewer interest
+Ranking chances
+Green light ideas that can grow your channel.
+Red light the ones that would flop."
             visual={<IdeaValidationVisual />}
             className="lg:col-span-2"
             delay={0.4}
           />
           {/* Placeholder for 5th slot to maintain layout balance */}
           <FeatureCard
-            title="More Features Coming Soon"
-            description="We are constantly adding new AI-powered tools to help you grow faster. Stay tuned for updates like thumbnail analysis and more."
+            title="More Tools Coming Soon"
+            description="We’re building more creator-focused AI tools to help you grow faster, create smarter, and rank higher.
+Stay tuned for powerful updates"
             visual={<ComingSoonVisual />}
             className="lg:col-span-2 group"
             delay={0.5}

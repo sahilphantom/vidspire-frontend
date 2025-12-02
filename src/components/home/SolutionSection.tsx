@@ -142,15 +142,16 @@ const SolutionSection = () => {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className={`inline-flex ${spaceGrotesk.className} items-center gap-2 px-3 py-1 rounded-full bg-[#d6211e]/10 text-[#B02E2B] text-xs font-bold uppercase tracking-wider mb-4`}>
+          <div className={`inline-flex ${spaceGrotesk.className} items-center gap-2 px-3 py-1 rounded-full  text-[#B02E2B] text-xs font-bold uppercase tracking-wider mb-4`}>
             Solution
           </div>
           <h2 className={`text-3xl ${spaceGrotesk.className} md:text-5xl font-bold text-gray-900 dark:text-white mb-6`}>
-            Empower Your Channel with AI Workflows
+            Empower Your Channel with Automated AI Workflows
+
+
           </h2>
           <p className={`text-gray-600 ${outfit.className} dark:text-zinc-400 text-lg leading-relaxed`}>
-            Generic tools won't suffice. Our platform is purpose-built to provide
-            exceptional AI-driven solutions for your unique growth needs.
+            Our platform turns your entire content workflow into an automated growth machine.
           </p>
         </div>
 
@@ -171,7 +172,8 @@ const SolutionSection = () => {
 
           <SolutionCard
             title="Seamless Optimization"
-            description="Easily integrate our AI solutions into your existing upload workflow. Validate titles, descriptions, and thumbnails in seconds."
+            description="Drop our tools straight into your workflow.
+Validate your titles, descriptions, thumbnails, and video ideas in seconds — no extra steps, no extra work."
             mockup={<IntegrationMockup />}
           />
 
