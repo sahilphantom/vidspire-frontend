@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={` selection:bg-[#B02E2B] selection:text-white antialiased`}
       >
         {/* Force default dark mode, enable class switching */}
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>

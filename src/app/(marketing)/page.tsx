@@ -2,6 +2,7 @@ import FAQSection from "@/components/home/FAQSection";
 import FeaturesSection from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
 import ProblemSection from "@/components/home/ProblemSection";
+import SolutionSection from "@/src/components/home/SolutionSection";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <Hero />
       <FeaturesSection />
       <ProblemSection />
+      <SolutionSection />
       <FAQSection />
     </main>
   );
