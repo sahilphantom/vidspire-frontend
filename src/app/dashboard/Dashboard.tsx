@@ -76,33 +76,33 @@ const toolCards = [
     title: "AI Comment Analyzer",
     description: "Understand what your viewers actually think.",
     icon: Brain,
-    darkClass: "bg-[#1f0a0a] border-red-500/20 hover:border-[#d6211e]/50 text-red-100",
-    lightClass: "bg-red-50 border-red-200 hover:border-red-400 text-red-900",
-    iconColor: "text-[#d6211e]",
+   darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
+    lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
+    iconColor: "text-[#B02E2B]",
   },
   {
     title: "Topic Finder",
     description: "Discover high-potential niche topics.",
     icon: Search,
-    darkClass: "bg-[#1a0808] border-red-600/20 hover:border-[#d6211e]/50 text-red-100",
-    lightClass: "bg-red-50/80 border-red-300 hover:border-red-400 text-red-900",
-    iconColor: "text-red-400",
+    darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
+    lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
+    iconColor: "text-[#B02E2B]",
   },
   {
     title: "Channel Breakdown",
     description: "Get an instant audit of any YouTube channel.",
     icon: TrendingUp,
-    darkClass: "bg-[#180505] border-red-700/20 hover:border-[#d6211e]/50 text-red-100",
-    lightClass: "bg-red-100/50 border-red-400 hover:border-red-500 text-red-900",
-    iconColor: "text-red-500",
+    darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
+    lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
+    iconColor: "text-[#B02E2B]",
   },
   {
     title: "Idea Validation",
     description: "Check if your next video idea can perform.",
     icon: Zap,
-    darkClass: "bg-[#1c0b05] border-orange-600/20 hover:border-orange-500/50 text-orange-100",
-    lightClass: "bg-orange-50 border-orange-200 hover:border-orange-400 text-orange-900",
-    iconColor: "text-orange-500",
+   darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
+    lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
+    iconColor: "text-[#B02E2B]",
   },
 ]
 
@@ -134,7 +134,7 @@ export default function Dashboard() {
   }, [])
 
   // Theme-dependent styles
-  const getBgColor = () => theme === "dark" ? "bg-black" : "bg-gray-50"
+  const getBgColor = () => theme === "dark" ? "bg-black" : "bg-white"
   const getTextColor = () => theme === "dark" ? "text-white" : "text-gray-900"
   const getSidebarBg = () => theme === "dark" ? "bg-black" : "bg-white"
   const getSidebarBorder = () => theme === "dark" ? "border-neutral-900" : "border-gray-200"
@@ -151,8 +151,8 @@ export default function Dashboard() {
 
   // Get button variant based on theme
   const getButtonVariant = () => theme === "dark" 
-    ? "bg-[#2b0c0c]/50 border-red-500/20 hover:bg-[#2b0c0c] hover:border-[#d6211e]/50 text-white"
-    : "bg-red-50 border-red-300 hover:bg-red-100 hover:border-red-400 text-red-900"
+    ? "bg-[#B02E2B]/50 border-red-500/20 hover:bg-[#2b0c0c] hover:border-[#B02E2B]/50 text-white"
+    : "bg-red-50 border-red-[#B02E2B] hover:bg-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B"
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -177,7 +177,7 @@ export default function Dashboard() {
                           width={80}
                           height={80}
                           className={`object-contain transition-all duration-300 ${
-                            isSidebarCollapsed ? "w-14 h-14" : "w-20 h-20 -my-6"
+                            isSidebarCollapsed ? "w-16 h-16" : "w-20 h-20 -my-6"
                           }`}
                         />
                       </div>
@@ -208,7 +208,7 @@ export default function Dashboard() {
                                     asChild
                                     className={`h-11 w-full justify-center rounded-md px-0 transition-all duration-200 ${
                                       item.isActive
-                                        ? "bg-[#d6211e] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
+                                        ? "bg-[#B02E2B] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
                                         : `${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`
                                     }`}
                                   >
@@ -233,7 +233,7 @@ export default function Dashboard() {
                                 asChild
                                 className={`h-11 w-full justify-start rounded-md px-3 transition-all duration-200 ${
                                   item.isActive
-                                    ? "bg-[#d6211e] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
+                                    ? "bg-[#B02E2B] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
                                     : `${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}`
                                 }`}
                               >
@@ -360,11 +360,11 @@ export default function Dashboard() {
                         return (
                           <Card
                             key={tool.title}
-                            className={`bg-gradient-to-br ${getCardClass(tool)} border hover:border-opacity-100 transition-all cursor-pointer group`}
+                            className={`bg-gradient-to-br ${getCardClass(tool)} border  cursor-pointer `}
                           >
-                            <CardHeader className="pb-3">
-                              <div className="flex items-start justify-between">
-                                <div className="flex items-center space-x-2">
+                            <CardHeader className="">
+                              <div className="flex items-start justify-start">
+                                <div className="flex items-center ">
                                   <Icon className={`w-5 h-5 ${tool.iconColor} group-hover:text-white transition-colors`} />
                                 </div>
                               </div>
@@ -404,8 +404,8 @@ export default function Dashboard() {
 
                   {/* Get Started Section */}
                   <section>
-                    <h2 className={`text-sm font-bold ${theme === "dark" ? "text-neutral-200" : "text-gray-700"} mb-4`}>Get Started</h2>
-                    <Card className={`bg-gradient-to-r ${theme === "dark" ? "from-[#1a0505] to-[#0f1623] border-red-900/20" : "from-red-50 to-blue-50 border-red-200"} overflow-hidden relative`}>
+                    <h2 className={`text-sm font-bold ${theme === "dark" ? "text-neutral-200" : "text-gray-900"} mb-4`}>Get Started</h2>
+                    <Card className={`bg-gradient-to-r ${theme === "dark" ? "from-[#1a0505] to-[#1a0505] border-[#B02E2B]" : "from-[#1a0505] to-[#1a0505] border-[#B02E2B]"} overflow-hidden relative`}>
                       <CardHeader className="pb-8 z-10 relative">
                         <div className="flex justify-between items-start">
                           <div>

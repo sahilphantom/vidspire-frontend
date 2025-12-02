@@ -59,18 +59,18 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       transition={{ duration: 0.5, delay }}
       whileHover={{ y: -5 }}
       className={cn(
-        "flex flex-col rounded-3xl p-8 border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden relative",
+        "flex flex-col rounded-3xl p-8 border border-gray-200 dark:border-zinc-800 bg-white dark:bg-black shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden relative",
         className
       )}
     >
       {/* Visual Area */}
-      <div className="h-52 mb-8 relative flex items-center justify-center bg-gray-50 dark:bg-zinc-800/50 rounded-2xl overflow-hidden group-hover:bg-red-50/50 dark:group-hover:bg-red-900/10 transition-colors">
+      <div className="h-52 mb-8 relative flex items-center justify-center bg-white dark:bg-black rounded-2xl overflow-hidden group-hover:bg-red-50/50 dark:group-hover:bg-red-900/10 transition-colors">
         {visual}
       </div>
 
       {/* Content */}
       <div>
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+        <h3 className="text-xl font-bold text-[#B02E2B] mb-3">
           {title}
         </h3>
         <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
@@ -84,12 +84,12 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 // Custom Visual Components for each feature
 const CommentAnalysisVisual: React.FC = () => (
   <div className="relative w-4/5 h-4/5 flex flex-col items-center justify-center">
-    <div className="w-full p-4 bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-gray-100 dark:border-zinc-800 relative z-10">
+    <div className="w-full p-4 bg-white dark:bg-black rounded-lg shadow-sm border border-gray-100 dark:border-zinc-800 relative z-10">
       <div className="flex items-center space-x-3 mb-4">
         <div className="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
           <MessageSquare className="w-4 h-4 text-[#B02E2B]" />
         </div>
-        <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="text-sm font-medium text-[#B02E2B]">
           Video Comment Analysis
         </div>
       </div>
@@ -98,7 +98,7 @@ const CommentAnalysisVisual: React.FC = () => (
           <span className="text-xs text-gray-500">Sentiment</span>
           <span className="text-xs font-bold text-[#B02E2B]">Mostly Positive</span>
         </div>
-        <div className="h-2 w-full bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden flex">
+        <div className="h-2 w-full bg-white dark:bg-black rounded-full overflow-hidden flex">
           <div className="h-full bg-gradient-to-r from-[#E55A52] to-[#B02E2B] w-[70%]" />
           <div className="h-full bg-gray-300 dark:bg-zinc-600 w-[10%]" />
           <div className="h-full bg-gray-400 dark:bg-zinc-700 w-[20%]" />
@@ -147,7 +147,7 @@ const TopicFinderVisual: React.FC = () => {
               >
                 <div className="flex items-center space-x-2">
                   <Icon className="w-4 h-4 text-gray-400 group-hover/item:text-[#d6211e]" />
-                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                  <span className="text-xs font-medium text-[#B02E2B]">
                     {item.topic}
                   </span>
                 </div>
@@ -214,7 +214,7 @@ const IdeaValidationVisual: React.FC = () => (
 const ComingSoonVisual: React.FC = () => (
   <div className="relative w-full h-full flex items-center justify-center">
     <div className="w-24 h-24 bg-gray-50 dark:bg-zinc-800 rounded-full flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-zinc-700 group-hover:border-[#d6211e] dark:group-hover:border-[#d6211e] transition-colors">
-      <Plus className="w-10 h-10 text-gray-400 group-hover:text-[#d6211e] transition-colors" />
+      <Plus className="w-10 h-10 text-gray-400 group-hover:text-[#B02E2B] transition-colors" />
     </div>
   </div>
 );
