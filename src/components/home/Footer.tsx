@@ -3,12 +3,29 @@
 import React from "react";
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin, MapPin, Phone, Mail, LucideIcon } from "lucide-react";
+import { Space_Grotesk, Outfit } from "next/font/google";
+
+
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
+
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const socialIcons: LucideIcon[] = [Facebook, Twitter, Instagram, Linkedin];
-  const companyLinks: string[] = ["Home", "About Us", "Features", "Pricing"];
+  const companyLinks: string[] = ["Home", "About Us", "Features", "Solutions", ];
   const resourceLinks: string[] = ["Blog", "Case Studies", "Help Center", "API Docs"];
 
   return (
@@ -27,11 +44,11 @@ const Footer: React.FC = () => {
                 height={80}
                 className="w-20 h-20 -my-6 object-contain"
               />
-              <span className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              <span className={`text-2xl ${spaceGrotesk.className} font-bold tracking-tight text-gray-900 dark:text-white`}>
                 Vidly
               </span>
             </Link>
-            <p className="text-gray-600 dark:text-zinc-400 leading-relaxed pr-4">
+            <p className={`text-gray-600 ${outfit.className} dark:text-zinc-400 leading-relaxed pr-4`}>
               Explore the latest AI solutions from VideSpire to skyrocket your YouTube channel's growth and engagement.
             </p>
             {/* Social Media Icons */}
@@ -49,7 +66,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Column 2: Company Links */}
-          <div>
+          <div className={`${outfit.className}`}>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Company</h3>
             <ul className="space-y-4">
               {companyLinks.map((item) => (
@@ -65,7 +82,7 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Column 3: Resources Links */}
+          {/* Column 3: Resources Links
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Resources</h3>
             <ul className="space-y-4">
@@ -80,26 +97,21 @@ const Footer: React.FC = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Column 4: Get in Touch */}
-          <div>
+          <div className={`${outfit.className}`}>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
               Get in Touch
             </h3>
             <ul className="space-y-6">
-              <li className="flex items-start gap-4">
-                <MapPin className="w-6 h-6 text-[#d6211e] shrink-0" />
-                <span className="text-gray-600 dark:text-zinc-400 leading-relaxed">
-                  123 AI Innovation Way, San Francisco, CA 94105
-                </span>
-              </li>
+             
               <li className="flex items-center gap-4">
-                <Phone className="w-6 h-6 text-[#d6211e] shrink-0" />
+                <Phone className="w-6 h-6 text-[#B02E2B] shrink-0" />
                 <span className="text-gray-600 dark:text-zinc-400">+1 (555) 123-4567</span>
               </li>
               <li className="flex items-center gap-4">
-                <Mail className="w-6 h-6 text-[#d6211e] shrink-0" />
+                <Mail className="w-6 h-6 text-[#B02E2B] shrink-0" />
                 <a
                   href="mailto:support@vidspire.com"
                   className="text-gray-600 dark:text-zinc-400 hover:text-[#d6211e] dark:hover:text-[#d6211e] transition-colors duration-300"
@@ -112,9 +124,9 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Section: Copyright */}
-        <div className="border-t border-gray-200 dark:border-zinc-800 pt-8 text-center text-gray-500 dark:text-zinc-500 text-sm">
+        <div className="border-t border-[#B02E2B] pt-8 text-center text-gray-500 dark:text-zinc-500 text-sm">
           <p>
-            © Copyright {currentYear}, All Rights Reserved by VideSpire.
+            © Copyright {currentYear}, All Rights Reserved by Vidly.
           </p>
         </div>
       </div>

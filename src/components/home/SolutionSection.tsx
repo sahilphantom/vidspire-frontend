@@ -4,6 +4,22 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Zap, ShieldCheck, Layers, BarChart3, Search, CheckCircle2 } from "lucide-react";
+import { Space_Grotesk, Outfit } from "next/font/google";
+
+
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
 
 // ==========================================
 // 1. Mini UI Mockups (CSS Only)
@@ -35,7 +51,7 @@ const StrategyMockup = () => (
     </div>
     {/* Floating Badge */}
     <div className="absolute bottom-4 right-4 bg-white dark:bg-zinc-800 shadow-lg border border-gray-100 dark:border-zinc-700 px-3 py-1.5 rounded-lg flex items-center gap-2">
-      <div className="w-2 h-2 bg-[#d6211e] rounded-full animate-pulse" />
+      <div className="w-2 h-2 bg-[#B02E2B] rounded-full animate-pulse" />
       <span className="text-[10px] font-bold text-gray-600 dark:text-gray-300">Trend Detected</span>
     </div>
   </div>
@@ -43,13 +59,13 @@ const StrategyMockup = () => (
 
 // Mockup for "Data Security" (Shield/Lock view)
 const SecurityMockup = () => (
-  <div className="w-full h-40 bg-gray-50 dark:bg-zinc-900 rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative flex items-center justify-center">
+  <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative flex items-center justify-center">
      {/* Grid Pattern Background */}
     <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(45deg,#000_25%,transparent_25%,transparent_75%,#000_75%,#000),linear-gradient(45deg,#000_25%,transparent_25%,transparent_75%,#000_75%,#000)] bg-[length:20px_20px]" />
     
     <div className="relative z-10 flex flex-col items-center">
       <div className="w-12 h-12 bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 flex items-center justify-center mb-3">
-        <ShieldCheck className="w-6 h-6 text-[#d6211e]" />
+        <ShieldCheck className="w-6 h-6 text-[#B02E2B]" />
       </div>
       <div className="flex items-center gap-2 bg-green-100 dark:bg-green-900/20 px-3 py-1 rounded-full">
         <CheckCircle2 className="w-3 h-3 text-green-600 dark:text-green-400" />
@@ -61,7 +77,7 @@ const SecurityMockup = () => (
 
 // Mockup for "Seamless Integration" (Graph/Chart view)
 const IntegrationMockup = () => (
-  <div className="w-full h-40 bg-gray-50 dark:bg-zinc-900 rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative p-4 flex flex-col justify-end">
+  <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative p-4 flex flex-col justify-end">
     <div className="flex items-end justify-between gap-2 h-24">
       {/* Animated Bars */}
       {[40, 70, 50, 90, 65].map((height, i) => (
@@ -72,7 +88,7 @@ const IntegrationMockup = () => (
           transition={{ duration: 0.5, delay: i * 0.1 }}
           className={cn(
             "w-full rounded-t-md opacity-80",
-            i === 3 ? "bg-[#d6211e]" : "bg-gray-200 dark:bg-zinc-800"
+            i === 3 ? "bg-[#B02E2B]" : "bg-gray-200 dark:bg-zinc-800"
           )}
         />
       ))}
@@ -98,7 +114,7 @@ const SolutionCard = ({ title, description, mockup }: SolutionCardProps) => {
   return (
     <div className="flex flex-col bg-white dark:bg-black rounded-3xl border border-gray-100 dark:border-zinc-800 overflow-hidden hover:shadow-xl hover:shadow-[#d6211e]/5 transition-all duration-300 group">
       <div className="p-8 pb-0 flex-1">
-        <h3 className="text-lg font-bold text-[#d6211e] mb-3 group-hover:text-[#B02E2B] transition-colors">
+        <h3 className="text-lg font-bold text-[#B02E2B] mb-3 group-hover:text-[#B02E2B] transition-colors">
           {title}
         </h3>
         <p className="text-gray-600 dark:text-zinc-400 leading-relaxed text-sm mb-8">
@@ -121,25 +137,25 @@ const SolutionCard = ({ title, description, mockup }: SolutionCardProps) => {
 
 const SolutionSection = () => {
   return (
-    <section className="py-24 bg-gray-50 dark:bg-zinc-950/50 transition-colors duration-300">
+    <section className="py-24 bg-white dark:bg-black transition-colors duration-300">
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d6211e]/10 text-[#d6211e] text-xs font-bold uppercase tracking-wider mb-4">
+          <div className={`inline-flex ${spaceGrotesk.className} items-center gap-2 px-3 py-1 rounded-full bg-[#d6211e]/10 text-[#B02E2B] text-xs font-bold uppercase tracking-wider mb-4`}>
             Solution
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className={`text-3xl ${spaceGrotesk.className} md:text-5xl font-bold text-gray-900 dark:text-white mb-6`}>
             Empower Your Channel with AI Workflows
           </h2>
-          <p className="text-gray-600 dark:text-zinc-400 text-lg leading-relaxed">
+          <p className={`text-gray-600 ${outfit.className} dark:text-zinc-400 text-lg leading-relaxed`}>
             Generic tools won't suffice. Our platform is purpose-built to provide
             exceptional AI-driven solutions for your unique growth needs.
           </p>
         </div>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className={`grid ${outfit.className} grid-cols-1 md:grid-cols-3 gap-8`}>
           
           <SolutionCard
             title="Smart Content Strategy"

@@ -18,6 +18,22 @@ import {
   Plus,
 } from "lucide-react";
 import Image from "next/image";
+import { Space_Grotesk, Outfit } from "next/font/google";
+
+
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
 
 // Reusable Card Component
 interface FeatureCardProps {
@@ -71,7 +87,7 @@ const CommentAnalysisVisual: React.FC = () => (
     <div className="w-full p-4 bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-gray-100 dark:border-zinc-800 relative z-10">
       <div className="flex items-center space-x-3 mb-4">
         <div className="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-          <MessageSquare className="w-4 h-4 text-[#d6211e]" />
+          <MessageSquare className="w-4 h-4 text-[#B02E2B]" />
         </div>
         <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Video Comment Analysis
@@ -80,7 +96,7 @@ const CommentAnalysisVisual: React.FC = () => (
       <div className="space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-500">Sentiment</span>
-          <span className="text-xs font-bold text-[#d6211e]">Mostly Positive</span>
+          <span className="text-xs font-bold text-[#B02E2B]">Mostly Positive</span>
         </div>
         <div className="h-2 w-full bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden flex">
           <div className="h-full bg-gradient-to-r from-[#E55A52] to-[#B02E2B] w-[70%]" />
@@ -209,24 +225,24 @@ const FeaturesSection: React.FC = () => {
       <div className="container mx-auto px-4 md:px-6 max-w-7xl">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full  text-[#d6211e] text-sm font-medium mb-4">
+          <div className={`inline-flex ${spaceGrotesk.className} items-center gap-2 px-3 py-1 rounded-full  text-[#d6211e] text-sm font-medium mb-4`}>
 
             FEATURES
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold font-heading text-gray-900 dark:text-white tracking-tight mb-6">
+          <h2 className={`text-4xl  ${spaceGrotesk.className} md:text-5xl font-bold font-heading text-gray-900 dark:text-white tracking-tight mb-6`}>
             Powerful tools to <span className="bg-gradient-to-r  from-[#E55A52] to-[#B02E2B] bg-clip-text text-transparent">
                dominate your niche.
             </span>
             
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
+          <p className={`text-lg  ${outfit.className} text-gray-600 dark:text-gray-400`}>
             Stop guessing. Start growing. Our AI-powered suite gives you the
             insights you need to create content that actually performs.
           </p>
         </div>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-8">
+        <div className={`grid grid-cols-1 ${outfit.className} md:grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-8`}>
           {/* Row 1: Two Large Cards (Top Left & Top Right) */}
           <FeatureCard
             title="AI Comment Analysis (Main Differentiator)"

@@ -6,7 +6,22 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, X } from "lucide-react"; // Icons for mobile menu
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils"; // Assuming you have a cn utility
+import { Space_Grotesk, Outfit } from "next/font/google";
 
+
+
+
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space", // This defines the CSS variable name
+  display: "swap",
+});
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit", // This defines the CSS variable name
+  display: "swap",
+});
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -25,7 +40,7 @@ export function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Features", href: "/feature" },
-    { name: "Solutions", href: "/" },
+    { name: "Solutions", href: "/solution" },
   ];
 
   return (
@@ -47,7 +62,7 @@ export function Navbar() {
                 height={80}
                 className="w-20 h-20 -my-6 object-contain"
               />
-          <span className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+          <span className={`text-xl ${spaceGrotesk.className} font-semibold tracking-tight text-gray-900 dark:text-white`}>
             Vidly
           </span>
          
@@ -55,7 +70,7 @@ export function Navbar() {
          </Link>
 
         {/* Center: Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className={`hidden ${outfit.className} md:flex items-center gap-8`}>
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -68,12 +83,12 @@ export function Navbar() {
         </div>
 
         {/* Right: Actions (Desktop) */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className={`hidden ${outfit.className} md:flex items-center gap-4`}>
           <ThemeToggle />
           
           <Link
             href="#"
-            className="border-[#B02E2B] border-2 text-black dark:text-white rounded-full text-sm font-medium px-5 py-2 hover:bg-[#d6211e]/10 transition-colors"
+            className={`border-[#B02E2B]  border-2 text-black dark:text-white rounded-full text-sm font-medium px-5 py-2 hover:bg-[#d6211e]/10 transition-colors`}
           >
             Watch Demo
           </Link>

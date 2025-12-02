@@ -2,8 +2,22 @@
 import React, { useLayoutEffect, useRef } from "react";
 import gsap from "gsap"; // Ensure you have gsap installed
 import HeroGeometric from "../HeroGeometry";
+import { Space_Grotesk, Outfit } from "next/font/google";
 import { HoverBorderGradient } from "../ui/hover-border-gradient";
 
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space", // This defines the CSS variable name
+  display: "swap",
+});
+
+// 3. Configure Outfit
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit", // This defines the CSS variable name
+  display: "swap",
+});
 export default function Hero() {
   const comp = useRef(null);
   const badgeRef = useRef(null);
@@ -66,14 +80,14 @@ export default function Hero() {
             className="bg-white border-[#B02E2B] border-1 dark:bg-black text-black dark:text-white flex items-center space-x-2"
           >
             <span className="w-2 h-2 rounded-full bg-[#B02E2B] inline-block mr-2" />
-            <span className="text-xs font-medium">v2.0 - Updated integrations</span>
+            <span className={`text-xs font-medium ${outfit.className} `}>Anouncment Introducing Vidly</span>
           </HoverBorderGradient>
         </div>
 
         {/* Main Headline */}
         <div ref={titleRef} className="invisible">
             {/* Added dark:text-white to h1 */}
-            <h1 className="text-5xl md:text-7xl font-medium font-heading tracking-tight leading-tight text-gray-900 dark:text-white">
+            <h1 className={`text-5xl  md:text-7xl font-medium ${spaceGrotesk.className}  font-heading tracking-tight leading-tight text-gray-900 dark:text-white`}>
             Your ultimate solution 
             <br />
             {" "}
@@ -112,7 +126,7 @@ export default function Hero() {
 
         {/* Subheadline */}
         {/* Added dark:text-gray-300 */}
-        <p ref={subheadRef} className="invisible mt-6 text-base md:text-lg text-gray-800 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+        <p ref={subheadRef} className={`invisible mt-6 ${outfit.className} text-base md:text-lg text-gray-800 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed`}>
           Revolutionize product management. Boost productivity effortlessly.
           <br />
           Take control and elevate your workflow with us.
@@ -122,7 +136,7 @@ export default function Hero() {
         <div ref={ctaRef} className="invisible mt-10">
           <a
             href="/signup"
-            className="inline-block bg-linear-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] text-white px-8 py-3 rounded-full font-bold text-sm "
+            className={`inline-block ${outfit.className}  bg-linear-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] text-white px-8 py-3 rounded-full font-bold text-sm `}
           >
             Start for free
           </a>

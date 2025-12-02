@@ -4,6 +4,22 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Space_Grotesk, Outfit } from "next/font/google";
+
+
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
 
 // FAQ Data
 interface FAQItem {
@@ -60,7 +76,7 @@ const FAQItemComponent: React.FC<FAQItemProps> = ({ question, answer, isOpen, on
         "hover:border-[#d6211e]/50 dark:hover:border-[#d6211e]/50",
         
         // Active (open) state styles
-        isOpen && "border-[#d6211e] dark:border-[#d6211e] bg-gray-50 dark:bg-zinc-900/80 shadow-[0_0_15px_rgba(214,33,30,0.1)]"
+        isOpen && "border-[#B02E2B] dark:border-[#B02E2B] bg-gray-50 dark:bg-zinc-900/80 shadow-[0_0_15px_rgba(214,33,30,0.1)]"
       )}
     >
       <button
@@ -127,26 +143,26 @@ const FAQSection: React.FC = () => {
           
           {/* Left Column: Heading & CTA */}
           <div className="lg:col-span-5 flex flex-col justify-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d6211e]/10 border border-[#d6211e]/20 text-[#d6211e] text-sm font-medium mb-6 w-fit">
+            <div className={`inline-flex ${spaceGrotesk.className} items-center gap-2 px-3 py-1 rounded-full   text-[#B02E2B] text-sm font-medium mb-6 w-fit`}>
               <span>FAQ</span>
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-gray-900 dark:text-white tracking-tight mb-6 leading-tight">
+            <h2 className={`text-4xl ${spaceGrotesk.className} md:text-5xl font-bold font-heading text-gray-900 dark:text-white tracking-tight mb-6 leading-tight`}>
               Get all your questions answered here
             </h2>
             
-            <p className="text-lg text-gray-600 dark:text-zinc-400 mb-10">
+            <p className={`text-lg ${outfit.className}} text-gray-600 dark:text-zinc-400 mb-10`}>
               Have a question about VideSpire? We're here to help. Check out the most frequently asked questions below.
             </p>
             
             {/* Glowing CTA Button */}
             <div>
               <a
-                href="/signup"
+                href="/dashboard"
                 className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 {/* Gradient Background */}
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#E55A52] via-[#d6211e] to-[#B02E2B] group-hover:scale-105 transition-transform duration-300"></span>
+                <span className={`absolute ${outfit.className} inset-0 w-full h-full bg-gradient-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] group-hover:scale-105 transition-transform duration-300`}></span>
                 {/* Button Text & Icon */}
                 <span className="relative flex items-center gap-2">
                   Start for Free Now
@@ -159,7 +175,7 @@ const FAQSection: React.FC = () => {
           </div>
 
           {/* Right Column: FAQ Accordion */}
-          <div className="lg:col-span-7 flex flex-col gap-4">
+          <div className={`lg:col-span-7 ${outfit.className} flex flex-col gap-4`}>
             {faqData.map((item, index) => (
               <FAQItemComponent
                 key={index}

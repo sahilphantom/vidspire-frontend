@@ -1,18 +1,22 @@
 import type { Metadata } from "next";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Geist, Geist_Mono } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+// 1. Import the fonts from Google
+import { Space_Grotesk, Outfit } from "next/font/google"; 
 import "./globals.css";
-// Import the provider
 import { ThemeProvider } from "@/components/providers"; 
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// 2. Configure Space Grotesk
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
+  variable: "--font-space", // This defines the CSS variable name
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// 3. Configure Outfit
+const outfit = Outfit({
   subsets: ["latin"],
+  variable: "--font-outfit", // This defines the CSS variable name
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -28,9 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={` selection:bg-[#B02E2B] selection:text-white antialiased`}
+        // 4. Inject the font variables into the body className
+        className={`${outfit.variable} ${spaceGrotesk.variable} antialiased bg-white dark:bg-black selection:bg-[#B02E2B] selection:text-white font-sans`}
       >
-        {/* Force default dark mode, enable class switching */}
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           {children}
         </ThemeProvider>
