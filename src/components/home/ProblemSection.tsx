@@ -42,19 +42,19 @@ const ProblemSection: React.FC = () => {
   const problems: Problem[] = [
     {
       icon: <Brain className="w-6 h-6 text-[#B02E2B]" />,
-      title: 'Data Overload',
-      description: 'You’re drowning in analytics. Thousands of comments, trends, CTR graphs, retention charts… but no clear direction. Valuable insights slip through the cracks every single day.',
+      title: 'The "Post & Pray" Trap',
+      description: 'You spend 10 hours filming a video idea that was doomed to fail before you even hit record. You are operating blind, hoping the algorithm saves you.',
     },
     {
       icon: <Zap className="w-6 h-6 text-[#B02E2B]" />,
-      title: 'Slow Decision-Making',
-      description: 'By the time you figure out what’s working, the trend is already gone. Manual processing keeps you behind competitors who move faster.',
+      title: 'Invisible Competitor Gaps',
+      description: 'Your niche has massive "content holes"—topics people are searching for but no one is making. You can\'t see them, so you keep fighting for scraps in crowded topics.',
     },
     {
       icon: <Shield className="w-6 h-6 text-[#B02E2B]" />,
-      title: 'Data Security Concerns',
-      description: 'With increasing cyber threats, businesses worry about the safety of their sensitive information when adopting new technologies.',
-    },
+      title: 'Vanity Metric Blindness',
+      description: 'You obsess over Subscriber count, but ignore the metrics that actually pay: Retention Drop-offs and Audience Demand. You are optimizing for ego, not revenue.',
+    }
   ];
 
   return (
@@ -62,11 +62,13 @@ const ProblemSection: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className={`text-center ${spaceGrotesk.className} mb-12`}>
           <h2 className="text-xs font-semibold tracking-widest text-[#B02E2B] uppercase mb-4">PROBLEM</h2>
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
-           Manually handling your YouTube data is <br />
-           killing your growth.
-
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-6 dark:text-white">
+         Stop Guessing. It’s Costing You Views.
           </h1>
+           <p className={`text-gray-600 ${outfit.className} dark:text-zinc-400 text-lg leading-relaxed`}>
+           90% of creators rely on "gut feeling" and luck. That is why they fail.You are losing traffic <br/> 
+           to competitors who use data to engineer their virality.
+          </p>
         </div>
         <div className={`grid grid-cols-1 ${outfit.className} md:grid-cols-3 gap-8 text-left`}>
           {problems.map((problem, index) => (

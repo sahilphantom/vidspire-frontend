@@ -16,7 +16,9 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Sun,
-  Moon
+  Moon,
+  Scan,     // Added for visual variety if available, otherwise falling back to existing
+  Shield    // Added for visual variety
 } from "lucide-react"
 import { useState, useEffect, createContext, useContext } from "react"
 
@@ -62,45 +64,47 @@ const useTheme = () => {
 }
 
 // --- Configuration ---
+// UPDATED: Menu items using new Strategy/Espionage naming
 const menuItems = [
-  { title: "Overview", icon: BarChart3, isActive: true },
-  { title: "Comment Analysis", icon: MessageSquare, isActive: false },
-  { title: "Topic Finder", icon: Search, isActive: false },
-  { title: "Channel Audit", icon: TrendingUp, isActive: false },
-  { title: "Idea Validator", icon: CheckCircle, isActive: false },
+  { title: "Command Center", icon: BarChart3, isActive: true },
+  { title: "Audience Mind-Reader", icon: MessageSquare, isActive: false },
+  { title: "Viral Gap Detector", icon: Search, isActive: false },
+  { title: "Advanced Viral Search", icon: TrendingUp, isActive: false },
+  { title: "Risk Audit", icon: CheckCircle, isActive: false },
   { title: "Settings", icon: Settings, disabled: true },
 ]
 
+// UPDATED: Tool Cards with "Unfair Advantage" copy
 const toolCards = [
   {
-    title: "AI Comment Analyzer",
-    description: "Understand what your viewers actually think.",
+    title: "Audience Mind-Reader",
+    description: "Extract hidden content demands and pain points from viewer comments.",
     icon: Brain,
-   darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
+    darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
     lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
     iconColor: "text-[#B02E2B]",
   },
   {
-    title: "Topic Finder",
-    description: "Discover high-potential niche topics.",
+    title: "Viral Gap Detector",
+    description: "Identify high-demand, low-supply 'Blue Ocean' topics to rank #1.",
     icon: Search,
     darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
     lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
     iconColor: "text-[#B02E2B]",
   },
   {
-    title: "Channel Breakdown",
-    description: "Get an instant audit of any YouTube channel.",
+    title: "Advanced Viral Search",
+    description: "Filter by 'Views Per Subscriber' to find small channels pulling massive numbers.",
     icon: TrendingUp,
     darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
     lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
     iconColor: "text-[#B02E2B]",
   },
   {
-    title: "Idea Validation",
-    description: "Check if your next video idea can perform.",
+    title: "Pre-Production Risk Audit",
+    description: "Simulate your video's performance against historical data before you film.",
     icon: Zap,
-   darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
+    darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
     lightClass: "bg-[#B02E2B] border-[#B02E2B] hover:border-[#B02E2B] text-[#B02E2B]",
     iconColor: "text-[#B02E2B]",
   },
@@ -313,9 +317,10 @@ export default function Dashboard() {
                       <p>{isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}</p>
                     </TooltipContent>
                   </Tooltip>
+                  {/* UPDATED: Header Text */}
                   <div className="flex-col">
-                    <h1 className={`text-lg font-semibold ${getTextColor()}`}>Dashboard Overview</h1>
-                    <p className={`text-xs ${getDescriptionText()} mt-0.5`}>A quick snapshot of your YouTube strategy tools.</p>
+                    <h1 className={`text-lg font-semibold ${getTextColor()}`}>Command Center</h1>
+                    <p className={`text-xs ${getDescriptionText()} mt-0.5`}>Your daily intelligence briefing and strategy tools.</p>
                   </div>
                 </div>
 
@@ -384,19 +389,20 @@ export default function Dashboard() {
                     </div>
                   </section>
               
-                  {/* Recent Analyses Section */}
+                  {/* Recent Analyses Section (Empty State) */}
                   <section>
-                    <h2 className={`text-sm font-semibold ${getHeaderText()} mb-4`}>Recent Analyses</h2>
+                    <h2 className={`text-sm font-semibold ${getHeaderText()} mb-4`}>Recent Missions</h2>
                     <Card className={`${getCardBg()} ${theme === "dark" ? "border-neutral-800" : "border-gray-300"} border-dashed`}>
                       <CardContent className="flex flex-col items-center justify-center py-12">
                         <div className={`rounded-full ${theme === "dark" ? "bg-neutral-800/50" : "bg-gray-200"} p-3 mb-3`}>
                           <MessageSquare className={`w-5 h-5 ${theme === "dark" ? "text-neutral-500" : "text-gray-400"}`} />
                         </div>
+                        {/* UPDATED: Empty State Text */}
                         <p className={`text-sm font-medium ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>
-                          You haven't analyzed anything yet.
+                          Intelligence Log Empty
                         </p>
                         <p className={`text-xs mt-1 ${theme === "dark" ? "text-neutral-500" : "text-gray-500"}`}>
-                          Get started by choosing a tool above to begin your analysis.
+                          You haven't run any missions yet. Select a tool above to start gathering data.
                         </p>
                       </CardContent>
                     </Card>
@@ -409,31 +415,33 @@ export default function Dashboard() {
                       <CardHeader className="pb-8 z-10 relative">
                         <div className="flex justify-between items-start">
                           <div>
+                            {/* UPDATED: CTA Text */}
                             <CardTitle className={`text-xl font-bold ${theme === "dark" ? "text-white" : "text-gray-900"} mb-2`}>
-                              Choose a tool to get started
+                              Launch Your First Mission
                             </CardTitle>
                             <CardDescription className={theme === "dark" ? "text-neutral-400" : "text-gray-600"}>
-                              Pick one of our AI-powered tools to analyze your YouTube channel and get actionable insights.
+                              Pick an intelligence tool to analyze the market and uncover actionable insights.
                             </CardDescription>
                           </div>
                           <Sparkles className={`w-5 h-5 ${theme === "dark" ? "text-[#d6211e]" : "text-red-500"}`} />
                         </div>
                       </CardHeader>
                       <CardContent className="z-10 relative">
+                        {/* UPDATED: Action Buttons */}
                         <div className={`grid gap-4 ${
                           isSidebarCollapsed ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4" : "grid-cols-1 md:grid-cols-4"
                         }`}>
                           <Button variant="outline" className={`${getButtonVariant()} h-12`}>
-                            Analyze Comments
+                            Mine Comments
                           </Button>
                           <Button variant="outline" className={`${getButtonVariant()} h-12`}>
-                            Find Topics
+                            Find Gaps
                           </Button>
                           <Button variant="outline" className={`${getButtonVariant()} h-12`}>
-                            Audit a Channel
+                            Hunt Outliers
                           </Button>
                           <Button variant="outline" className={`${getButtonVariant()} h-12`}>
-                            Validate Idea
+                            Audit Risk
                           </Button>
                         </div>
                       </CardContent>
@@ -442,43 +450,44 @@ export default function Dashboard() {
 
                   {/* Coming Soon Section */}
                   <section>
-                    <h2 className={`text-sm font-bold ${theme === "dark" ? "text-neutral-200" : "text-gray-700"} mb-4`}>Coming Soon</h2>
+                    {/* UPDATED: Coming Soon Title */}
+                    <h2 className={`text-sm font-bold ${theme === "dark" ? "text-neutral-200" : "text-gray-700"} mb-4`}>Future Arsenal</h2>
                     <Card className={`${getComingSoonBg()} ${getComingSoonBorder()}`}>
                       <CardContent className="p-6">
                         <p className={`text-sm mb-6 ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>
-                          We're continuously building new features to help you grow. Stay tuned!
+                          We are building the ultimate unfair advantage. Stay tuned!
                         </p>
                         
                         <div className={`grid gap-4 ${
                           isSidebarCollapsed ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 md:grid-cols-3"
                         }`}>
-                          {/* Item 1 */}
+                          {/* Item 1 - UPDATED */}
                           <div className={`h-12 rounded-md border ${theme === "dark" ? "border-neutral-800 bg-[#0f0f0f]" : "border-gray-300 bg-gray-100"} flex items-center px-4 justify-between ${theme === "dark" ? "opacity-60" : "opacity-80"}`}>
                             <div className="flex items-center gap-3">
                               <Eye className={`w-4 h-4 ${theme === "dark" ? "text-neutral-500" : "text-gray-400"}`} />
-                              <span className={`text-sm ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>Competitor Analysis</span>
+                              <span className={`text-sm ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>Agent Ethan (AI Manager)</span>
                             </div>
                             <Badge variant="secondary" className={`${theme === "dark" ? "bg-neutral-800 text-neutral-500" : "bg-gray-200 text-gray-600"} text-[10px] h-5`}>
                               Soon
                             </Badge>
                           </div>
 
-                          {/* Item 2 */}
+                          {/* Item 2 - UPDATED */}
                           <div className={`h-12 rounded-md border ${theme === "dark" ? "border-neutral-800 bg-[#0f0f0f]" : "border-gray-300 bg-gray-100"} flex items-center px-4 justify-between ${theme === "dark" ? "opacity-60" : "opacity-80"}`}>
                             <div className="flex items-center gap-3">
                               <Search className={`w-4 h-4 ${theme === "dark" ? "text-neutral-500" : "text-gray-400"}`} />
-                              <span className={`text-sm ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>Keyword Explorer</span>
+                              <span className={`text-sm ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>Thumbnail Forensics</span>
                             </div>
                             <Badge variant="secondary" className={`${theme === "dark" ? "bg-neutral-800 text-neutral-500" : "bg-gray-200 text-gray-600"} text-[10px] h-5`}>
                               Soon
                             </Badge>
                           </div>
 
-                          {/* Item 3 */}
+                          {/* Item 3 - UPDATED */}
                           <div className={`h-12 rounded-md border ${theme === "dark" ? "border-neutral-800 bg-[#0f0f0f]" : "border-gray-300 bg-gray-100"} flex items-center px-4 justify-between ${theme === "dark" ? "opacity-60" : "opacity-80"}`}>
                             <div className="flex items-center gap-3">
                               <FileText className={`w-4 h-4 ${theme === "dark" ? "text-neutral-500" : "text-gray-400"}`} />
-                              <span className={`text-sm ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>Script Generator</span>
+                              <span className={`text-sm ${theme === "dark" ? "text-neutral-400" : "text-gray-600"}`}>Retention Spy</span>
                             </div>
                             <Badge variant="secondary" className={`${theme === "dark" ? "bg-neutral-800 text-neutral-500" : "bg-gray-200 text-gray-600"} text-[10px] h-5`}>
                               Soon

@@ -29,19 +29,19 @@ interface FAQItem {
 
 const faqData: FAQItem[] = [
   {
-    question: "What exactly does your AI platform do?",
+    question: "I have 0 subscribers. Will this work for me?",
     answer:
-      "Our platform analyzes your YouTube data — comments, topics, titles, thumbnails, competitors, and trends — and gives you clear, actionable insights. You get faster decisions, smarter content ideas, and higher-performing videos without wasting hours on manual research.",
+      "Yes. In fact, you need it more than big channels. You can't afford to waste 10 uploads guessing. Use our Viral Outlier Hunter to find the specific video format that is mathematically proven to work for small channels in your niche.",
   },
   {
-    question: "How does your AI help my channel grow?",
+    question: "Is this just another wrapper for ChatGPT?",
     answer:
-      "By automating the most time-consuming parts of content strategy: Finding viral topics, Understanding audience sentiment, Validating ideas before you film. You make better content faster and avoid low-performing videos.",
+      "No. ChatGPT guesses. We use live YouTube API data to analyze thousands of real comments, view counts, and retention graphs in real-time. We give you facts, not hallucinations.",
   },
   {
     question: "Is my channel data safe?",
     answer:
-      "Yes. Everything is protected with enterprise-grade encryption. We never sell, share, or expose your data — only you control it. Your analytics stay private and secure at all times.",
+      "Absolutely. We use the official YouTube API and bank-grade encryption. We analyze public data (trends, competitor views) to give you an edge, while keeping your private revenue stats 100% confidential.",
   },
   {
     question: "Do I need any technical knowledge?",
@@ -49,9 +49,9 @@ const faqData: FAQItem[] = [
       "Nope. The platform is built for creators, not engineers. If you can upload a video to YouTube, you can use this — it’s that simple.",
   },
   {
-    question: "Does your tool work for small channels?",
+    question: "Do I need to link my YouTube channel?",
     answer:
-      "Absolutely. Small channels benefit even more because our AI helps you spot opportunities bigger creators miss. You get: Low-competition topics, Underserved niches, High-potential content ideas, Perfect for fast early-stage growth.",
+      "No. We believe in zero-risk intelligence. Vidly analyzes public data—competitor videos, comment sections, and global trends. You get all the insights without giving us (or anyone else) access to your private channel dashboard.",
   },
 ];
 
@@ -148,11 +148,11 @@ const FAQSection: React.FC = () => {
             </div>
             
             <h2 className={`text-4xl ${spaceGrotesk.className} md:text-5xl font-bold font-heading text-gray-900 dark:text-white tracking-tight mb-6 leading-tight`}>
-              Get all your questions answered here
+             No Fluff. Just Strategy.
             </h2>
             
             <p className={`text-lg ${outfit.className}} text-gray-600 dark:text-zinc-400 mb-10`}>
-              Have a question about VideSpire? We're here to help. Check out the most frequently asked questions below.
+              Everything you need to know before you stop guessing and start dominating.
             </p>
             
             {/* Glowing CTA Button */}

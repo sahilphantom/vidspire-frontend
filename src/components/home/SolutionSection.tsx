@@ -3,17 +3,26 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Zap, ShieldCheck, Layers, BarChart3, Search, CheckCircle2 } from "lucide-react";
+import { 
+  Zap, 
+  ShieldCheck, 
+  Layers, 
+  BarChart3, 
+  Search, 
+  CheckCircle2, 
+  ScanEye,      // New for Espionage
+  BrainCircuit, // New for Audits
+  Target,       // New for Blue Ocean
+  TrendingUp,
+  Lock
+} from "lucide-react";
 import { Space_Grotesk, Outfit } from "next/font/google";
-
-
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-space-grotesk",
 });
-
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -22,82 +31,140 @@ const outfit = Outfit({
 });
 
 // ==========================================
-// 1. Mini UI Mockups (CSS Only)
+// 1. Mini UI Mockups (Visualizing the specific features)
 // ==========================================
 
-// Mockup for "Smart Strategy" (List view)
-const StrategyMockup = () => (
-  <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative p-4">
-    {/* Fake Header */}
-    <div className="flex gap-1.5 mb-3">
-      <div className="w-2 h-2 rounded-full bg-red-400/50" />
-      <div className="w-2 h-2 rounded-full bg-yellow-400/50" />
-      <div className="w-2 h-2 rounded-full bg-green-400/50" />
-    </div>
-    {/* Fake Content Lines */}
-    <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        <div className="w-4 h-4 rounded bg-red-100 dark:bg-red-900/20" />
-        <div className="h-2 w-2/3 bg-gray-200 dark:bg-zinc-800 rounded" />
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="w-4 h-4 rounded bg-gray-100 dark:bg-zinc-800" />
-        <div className="h-2 w-1/2 bg-gray-200 dark:bg-zinc-800 rounded" />
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="w-4 h-4 rounded bg-gray-100 dark:bg-zinc-800" />
-        <div className="h-2 w-3/4 bg-gray-200 dark:bg-zinc-800 rounded" />
-      </div>
-    </div>
-    {/* Floating Badge */}
-    <div className="absolute bottom-4 right-4 bg-white dark:bg-zinc-800 shadow-lg border border-gray-100 dark:border-zinc-700 px-3 py-1.5 rounded-lg flex items-center gap-2">
-      <div className="w-2 h-2 bg-[#B02E2B] rounded-full animate-pulse" />
-      <span className="text-[10px] font-bold text-gray-600 dark:text-gray-300">Trend Detected</span>
-    </div>
-  </div>
-);
-
-// Mockup for "Data Security" (Shield/Lock view)
-const SecurityMockup = () => (
-  <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative flex items-center justify-center">
-     {/* Grid Pattern Background */}
-    <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(45deg,#000_25%,transparent_25%,transparent_75%,#000_75%,#000),linear-gradient(45deg,#000_25%,transparent_25%,transparent_75%,#000_75%,#000)] bg-[length:20px_20px]" />
-    
-    <div className="relative z-10 flex flex-col items-center">
-      <div className="w-12 h-12 bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 flex items-center justify-center mb-3">
-        <ShieldCheck className="w-6 h-6 text-[#B02E2B]" />
-      </div>
-      <div className="flex items-center gap-2 bg-green-100 dark:bg-green-900/20 px-3 py-1 rounded-full">
-        <CheckCircle2 className="w-3 h-3 text-green-600 dark:text-green-400" />
-        <span className="text-[10px] font-bold text-green-700 dark:text-green-400">Encrypted</span>
-      </div>
-    </div>
-  </div>
-);
-
-// Mockup for "Seamless Integration" (Graph/Chart view)
-const IntegrationMockup = () => (
-  <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative p-4 flex flex-col justify-end">
-    <div className="flex items-end justify-between gap-2 h-24">
-      {/* Animated Bars */}
-      {[40, 70, 50, 90, 65].map((height, i) => (
-        <motion.div
-          key={i}
-          initial={{ height: 0 }}
-          whileInView={{ height: `${height}%` }}
-          transition={{ duration: 0.5, delay: i * 0.1 }}
-          className={cn(
-            "w-full rounded-t-md opacity-80",
-            i === 3 ? "bg-[#B02E2B]" : "bg-gray-200 dark:bg-zinc-800"
-          )}
+// Mockup for "Competitor Espionage" (X-Ray/Scan effect)
+const EspionageMockup = () => (
+  <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative p-4 flex flex-col items-center justify-center">
+    {/* Abstract Video Frame */}
+    <div className="relative w-4/5 h-24 bg-gray-50 dark:bg-zinc-900/50 rounded-lg border border-gray-200 dark:border-zinc-800 overflow-hidden group">
+        {/* Scanning Line Animation */}
+        <motion.div 
+            className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#B02E2B] to-transparent opacity-50 z-20"
+            animate={{ top: ["0%", "100%", "0%"] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
         />
-      ))}
-    </div>
-    {/* Floating Tag */}
-    <div className="absolute top-4 left-4 flex gap-2">
-         <span className="h-1.5 w-12 bg-gray-200 dark:bg-zinc-700 rounded-full"/>
+        
+        {/* Fake Content Elements inside the video */}
+        <div className="p-3 space-y-2 opacity-50">
+            <div className="flex gap-2">
+                <div className="h-2 w-1/3 bg-gray-200 dark:bg-zinc-800 rounded-sm"/>
+                <div className="h-2 w-1/2 bg-gray-200 dark:bg-zinc-800 rounded-sm"/>
+            </div>
+             <div className="h-16 w-full bg-gray-100 dark:bg-zinc-800/50 rounded-md flex items-center justify-center relative">
+                 <div className="absolute inset-0 border border-[#B02E2B]/20 rounded-md" />
+                 <ScanEye className="w-5 h-5 text-[#B02E2B]/60" />
+             </div>
+        </div>
+
+        {/* Pop-up Insights */}
+        <motion.div 
+            initial={{ scale: 0, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 1, type: "spring" }}
+            className="absolute bottom-2 right-2 bg-[#B02E2B] text-white text-[8px] font-bold px-2 py-1 rounded shadow-lg z-30"
+        >
+            Hook Detected
+        </motion.div>
     </div>
   </div>
+);
+
+// Mockup for "Pre-Production Audits" (Simulation/Score Card)
+const AuditMockup = () => (
+    <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative p-4 flex items-center justify-center">
+         <div className="relative z-10 w-full max-w-[220px] space-y-4">
+            {/* Header */}
+            <div className="flex justify-between items-center px-1">
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
+                    <BrainCircuit className="w-3.5 h-3.5" />
+                    <span>AI Simulation</span>
+                </div>
+                <span className="text-[10px] font-bold bg-green-100 dark:bg-green-900/30 text-green-600 px-1.5 py-0.5 rounded">Pass</span>
+            </div>
+            
+            {/* The Bar */}
+            <div className="space-y-1.5">
+                <div className="flex justify-between text-[10px] font-semibold text-gray-700 dark:text-gray-300">
+                    <span>Viral Probability</span>
+                    <span>94%</span>
+                </div>
+                <div className="h-2 w-full bg-gray-100 dark:bg-zinc-900 rounded-full overflow-hidden">
+                    <motion.div 
+                        className="h-full bg-gradient-to-r from-orange-400 to-[#B02E2B]"
+                        initial={{ width: "0%" }}
+                        whileInView={{ width: "94%" }}
+                        transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
+                    />
+                </div>
+            </div>
+
+            {/* Checklist items */}
+            <div className="grid grid-cols-2 gap-2">
+                <div className="h-6 bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded flex items-center px-2 gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <div className="h-1 w-8 bg-gray-200 dark:bg-zinc-800 rounded" />
+                </div>
+                 <div className="h-6 bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded flex items-center px-2 gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <div className="h-1 w-10 bg-gray-200 dark:bg-zinc-800 rounded" />
+                </div>
+            </div>
+         </div>
+    </div>
+);
+
+// Mockup for "Blue Ocean Engine" (Visualizing Outliers)
+const BlueOceanMockup = () => (
+     <div className="w-full h-40 bg-white dark:bg-black rounded-t-xl border border-gray-200 dark:border-zinc-800 border-b-0 overflow-hidden relative p-4 flex flex-col justify-end">
+        {/* Chart Container */}
+        <div className="flex items-end justify-between gap-1.5 h-28 px-2">
+             {/* The Crowd (Low Competition/Average Views) */}
+             {[25, 35, 30, 20, 40].map((h, i) => (
+                 <motion.div 
+                    key={i}
+                    className="w-full bg-gray-100 dark:bg-zinc-900 rounded-t-sm"
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${h}%` }}
+                    transition={{ duration: 0.4, delay: i * 0.05 }}
+                 />
+             ))}
+             
+             {/* The Outlier (High Views/Low Competition) */}
+             <motion.div 
+                className="w-full bg-[#B02E2B] rounded-t-md relative group shadow-[0_0_15px_rgba(176,46,43,0.3)]"
+                initial={{ height: 0 }}
+                whileInView={{ height: "85%" }}
+                transition={{ duration: 0.6, delay: 0.3, type: "spring", stiffness: 100 }}
+             >
+                {/* Floating Tooltip */}
+                 <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: -10 }}
+                    transition={{ delay: 0.8 }}
+                    className="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[8px] font-bold px-2 py-1 rounded whitespace-nowrap z-10"
+                 >
+                    Gap Found
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                 </motion.div>
+             </motion.div>
+
+             {/* More Crowd */}
+             {[35, 25].map((h, i) => (
+                 <motion.div 
+                    key={`end-${i}`}
+                    className="w-full bg-gray-100 dark:bg-zinc-900 rounded-t-sm"
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${h}%` }}
+                    transition={{ duration: 0.4, delay: 0.5 + (i * 0.05) }}
+                 />
+             ))}
+        </div>
+        
+        {/* Axis Line */}
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-100 dark:bg-zinc-800" />
+     </div>
 );
 
 // ==========================================
@@ -146,12 +213,10 @@ const SolutionSection = () => {
             Solution
           </div>
           <h2 className={`text-3xl ${spaceGrotesk.className} md:text-5xl font-bold text-gray-900 dark:text-white mb-6`}>
-            Empower Your Channel with Automated AI Workflows
-
-
+           The Intelligence Agency for Your Channel
           </h2>
           <p className={`text-gray-600 ${outfit.className} dark:text-zinc-400 text-lg leading-relaxed`}>
-            Our platform turns your entire content workflow into an automated growth machine.
+           We don't just show you analytics. We spy on your competitors, audit your risks, and hand you a roadmap to domination.
           </p>
         </div>
 
@@ -159,22 +224,21 @@ const SolutionSection = () => {
         <div className={`grid ${outfit.className} grid-cols-1 md:grid-cols-3 gap-8`}>
           
           <SolutionCard
-            title="Smart Content Strategy"
-            description="Our platform utilizes cutting-edge AI algorithms to analyze market gaps, telling you exactly what topics will perform before you film."
-            mockup={<StrategyMockup />}
+            title="Competitor Espionage"
+            description="Stop wondering why they went viral. We X-ray their top performing videos to show you exactly what topics, pacing, and hooks stolen the audience's attention—so you can take it back."
+            mockup={<EspionageMockup />}
           />
 
           <SolutionCard
-            title="Secure Data Handling"
-            description="We prioritize your channel data security with state-of-the-art encryption, ensuring your exclusive insights and revenue stats remain confidential."
-            mockup={<SecurityMockup />}
+            title="Pre-Production Audits"
+            description="Never waste time on a flop again. Our AI simulates how your video idea will perform against 10,000+ real viewer comments before you even write the script."
+            mockup={<AuditMockup />}
           />
 
           <SolutionCard
-            title="Seamless Optimization"
-            description="Drop our tools straight into your workflow.
-Validate your titles, descriptions, thumbnails, and video ideas in seconds — no extra steps, no extra work."
-            mockup={<IntegrationMockup />}
+            title={'The "Blue Ocean" Engine'}
+            description='We identify the "Viral Outliers"—the specific video topics getting millions of views with low competition—so you can swoop in and own the keyword.'
+            mockup={<BlueOceanMockup />}
           />
 
         </div>

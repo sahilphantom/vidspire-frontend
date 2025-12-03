@@ -80,7 +80,7 @@ export default function Hero() {
             className="bg-white border-[#B02E2B] border-1 dark:bg-black text-black dark:text-white flex items-center space-x-2"
           >
             <span className="w-2 h-2 rounded-full bg-[#B02E2B] inline-block mr-2" />
-            <span className={`text-xs font-medium ${outfit.className} `}>Anouncment Introducing Vidly</span>
+            <span className={`text-xs font-medium ${outfit.className} `}>Announcement Introducing Vidly</span>
           </HoverBorderGradient>
         </div>
 
@@ -128,7 +128,7 @@ export default function Hero() {
         {/* Subheadline */}
         {/* Added dark:text-gray-300 */}
         <p ref={subheadRef} className={`invisible mt-6 ${outfit.className} text-base md:text-lg text-gray-800 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed`}>
-         Turn every comment, idea, and trend into data-backed clarity.
+        Your audience is telling you exactly what they want to watch next. You just can't see it yet. Use AI to extract questions, demands, and hidden viral opportunities from the noise.
           <br />
           {/* Analyze audience sentiment, validate video ideas, and understand your viewers like never before — instantly. */}
 
