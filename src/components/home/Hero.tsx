@@ -146,7 +146,7 @@ export default function Hero() {
 
         {/* Dashboard Preview */}
         
-          <img src="/assets/advanced1.jpg" alt="Vidspire Dashboard" className="rounded shadow-lg  w-full h-full mt-20 object-cover" />
+          <img src="/assets/dashboard.png" alt="Vidspire Dashboard" className="rounded shadow-lg  w-full h-full mt-20 object-cover" />
        
       </div>
     </section>
