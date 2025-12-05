@@ -11,18 +11,21 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 
-// Types matching your Backend Response
+// ✅ FIXED: Updated types to match backend response
 interface VideoResult {
   id: string
+  videoUrl: string // ✅ Added
   title: string
   thumbnail: string
   channel: string
+  channelUrl: string // ✅ Added
   views: number
   subscribers: number
   outlierScore: number
   viewToSubRatio: number
   publishedAt: string
   durationMins: number
+  isShort: boolean // ✅ Added for better filtering display
 }
 
 export default function AdvancedViralSearchPage() {
@@ -33,13 +36,13 @@ export default function AdvancedViralSearchPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   
-  // Filters
+  // ✅ FIXED: Updated filter names to match backend
   const [minViews, setMinViews] = useState([10000])
   const [outlierThreshold, setOutlierThreshold] = useState([200])
-  const [videoType, setVideoType] = useState<"all" | "long" | "shorts">("long")
-  const [sortBy, setSortBy] = useState<"relevance" | "date" | "viewCount" | "rating">("date")
+  const [contentType, setContentType] = useState<"all" | "longForm" | "shorts">("longForm") // Changed from "long" to "longForm"
+  const [sortBy, setSortBy] = useState<"latest" | "bestMatch" | "mostViews" | "topRated">("latest") // Updated sort options
 
-  // --- API Call ---
+  // ✅ FIXED: Updated API call to match backend endpoint
   const handleSearch = async () => {
     if (!query) return
     setLoading(true)
@@ -49,13 +52,14 @@ export default function AdvancedViralSearchPage() {
     try {
       const params = new URLSearchParams({
         query: query,
-        videoType: videoType,
-        sort: sortBy,
-        views: `${minViews[0]}-10000000`, 
-        outlierScore: `${outlierThreshold[0]}-1000`, 
+        contentType: contentType, // ✅ Changed from videoType
+        sort: sortBy, // ✅ Now using correct values
+        viralScore: outlierThreshold[0].toString(), // ✅ Changed from outlierScore range
+        minViews: minViews[0].toString(), // ✅ Changed from views range
         maxResults: "20",
       })
 
+      // ✅ FIXED: Updated endpoint URL
       const response = await fetch(`http://localhost:5000/api/topics/search-advanced?${params}`)
       const data = await response.json()
 
@@ -76,16 +80,20 @@ export default function AdvancedViralSearchPage() {
     return new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 }).format(num)
   }
 
-  // 👇 NEW: Helper to format duration correctly
   const formatDuration = (mins: number) => {
     if (mins < 1) {
-      return `${Math.round(mins * 60)} sec`
+      return `${Math.round(mins * 60)}s`
     }
     const hours = Math.floor(mins / 60)
     const minutes = Math.floor(mins % 60)
     
     if (hours > 0) return `${hours}h ${minutes}m`
-    return `${minutes} mins`
+    return `${minutes}m`
+  }
+
+  // ✅ NEW: Handle video card click
+  const handleVideoClick = (videoUrl: string) => {
+    window.open(videoUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -146,56 +154,56 @@ export default function AdvancedViralSearchPage() {
             >
               <div className="pt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 border-t border-neutral-800 mt-2">
                 
-                {/* 1. Sort Order */}
+                {/* ✅ FIXED: 1. Sort Order - Updated values */}
                 <div className="space-y-4">
                   <Label className="text-white mb-2 block font-medium">Sort Strategy</Label>
                   <div className="grid grid-cols-2 gap-2">
                      <Badge 
                         variant="outline"
-                        className={`cursor-pointer justify-center py-2 ${sortBy === "date" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
-                        onClick={() => setSortBy("date")}
+                        className={`cursor-pointer justify-center py-2 ${sortBy === "latest" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
+                        onClick={() => setSortBy("latest")}
                       >
                         <Clock className="w-3 h-3 mr-1" /> Latest
                       </Badge>
                       <Badge 
                         variant="outline"
-                        className={`cursor-pointer justify-center py-2 ${sortBy === "relevance" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
-                        onClick={() => setSortBy("relevance")}
+                        className={`cursor-pointer justify-center py-2 ${sortBy === "bestMatch" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
+                        onClick={() => setSortBy("bestMatch")}
                       >
                         <TrendingUp className="w-3 h-3 mr-1" /> Best Match
                       </Badge>
                       <Badge 
                         variant="outline"
-                        className={`cursor-pointer justify-center py-2 ${sortBy === "viewCount" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
-                        onClick={() => setSortBy("viewCount")}
+                        className={`cursor-pointer justify-center py-2 ${sortBy === "mostViews" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
+                        onClick={() => setSortBy("mostViews")}
                       >
                         <Eye className="w-3 h-3 mr-1" /> Most Views
                       </Badge>
                       <Badge 
                         variant="outline"
-                        className={`cursor-pointer justify-center py-2 ${sortBy === "rating" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
-                        onClick={() => setSortBy("rating")}
+                        className={`cursor-pointer justify-center py-2 ${sortBy === "topRated" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
+                        onClick={() => setSortBy("topRated")}
                       >
                         <Star className="w-3 h-3 mr-1" /> Top Rated
                       </Badge>
                   </div>
                 </div>
 
-                {/* 2. Content Type */}
+                {/* ✅ FIXED: 2. Content Type - Updated values */}
                 <div className="space-y-4">
                   <Label className="text-white mb-2 block font-medium">Content Type</Label>
                   <div className="flex gap-2">
                     <Badge 
                       variant="outline"
-                      className={`cursor-pointer px-4 py-2 h-9 flex-1 justify-center ${videoType === "long" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "border-neutral-800 text-neutral-400 hover:bg-neutral-900"}`}
-                      onClick={() => setVideoType("long")}
+                      className={`cursor-pointer px-4 py-2 h-9 flex-1 justify-center ${contentType === "longForm" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "border-neutral-800 text-neutral-400 hover:bg-neutral-900"}`}
+                      onClick={() => setContentType("longForm")}
                     >
                       Long Form
                     </Badge>
                     <Badge 
                       variant="outline"
-                      className={`cursor-pointer px-4 py-2 h-9 flex-1 justify-center ${videoType === "shorts" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "border-neutral-800 text-neutral-400 hover:bg-neutral-900"}`}
-                      onClick={() => setVideoType("shorts")}
+                      className={`cursor-pointer px-4 py-2 h-9 flex-1 justify-center ${contentType === "shorts" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "border-neutral-800 text-neutral-400 hover:bg-neutral-900"}`}
+                      onClick={() => setContentType("shorts")}
                     >
                       Shorts
                     </Badge>
@@ -247,29 +255,42 @@ export default function AdvancedViralSearchPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <Card className="bg-black border-neutral-800 overflow-hidden hover:border-[#B02E2B] transition-all duration-300 group shadow-lg hover:shadow-[#B02E2B]/10">
+            {/* ✅ FIXED: Added click handler to open video in new tab */}
+            <Card 
+              className="bg-black border-neutral-800 overflow-hidden hover:border-[#B02E2B] transition-all duration-300 group shadow-lg hover:shadow-[#B02E2B]/10 cursor-pointer"
+              onClick={() => handleVideoClick(video.videoUrl)}
+            >
               
               <div className="relative aspect-video overflow-hidden">
                 <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
                 
-                {/* 👇 FIXED DURATION DISPLAY 👇 */}
+                {/* Duration Display */}
                 <div className="absolute bottom-2 right-2 bg-black/80 backdrop-blur-sm px-2 py-1 text-[10px] text-white rounded font-mono border border-white/10">
                   {formatDuration(video.durationMins)}
                 </div>
                 
+                {/* ✅ FIXED: Better viral score display */}
                 <div className={`absolute top-2 right-2 px-2 py-1 rounded-md text-xs font-bold shadow-lg flex items-center gap-1 backdrop-blur-md border ${
                     video.outlierScore > 300 ? "bg-[#B02E2B] text-white border-[#B02E2B]" : 
                     video.outlierScore > 150 ? "bg-orange-600 text-white border-orange-500" :
                     "bg-neutral-800 text-neutral-400 border-neutral-700"
                 }`}>
                   <TrendingUp className="w-3 h-3" />
-                  {video.outlierScore}% Viral
+                  {video.outlierScore}%
                 </div>
 
+                {/* Date Badge */}
                 <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] text-neutral-300 border border-white/10 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {new Date(video.publishedAt).toLocaleDateString()}
                 </div>
+
+                {/* ✅ NEW: Short/Long indicator */}
+                {video.isShort && (
+                  <div className="absolute bottom-2 left-2 bg-[#B02E2B]/90 backdrop-blur-sm px-2 py-1 text-[10px] text-white rounded font-bold">
+                    SHORT
+                  </div>
+                )}
               </div>
 
               <CardContent className="p-4 space-y-4">
@@ -337,7 +358,9 @@ export default function AdvancedViralSearchPage() {
         <div className="flex flex-col items-center justify-center py-20 text-neutral-500">
           <AlertCircle className="w-10 h-10 mb-4 text-[#B02E2B]" />
           <h3 className="text-lg font-bold text-white">No viral outliers found</h3>
-          <p>Try lowering the "Viral Score" or selecting "Latest" sort order.</p>
+          <p className="text-center max-w-md">
+            Try lowering the "Viral Score" threshold, adjusting the "Min Views", or selecting different content type.
+          </p>
         </div>
       )}
     </div>
