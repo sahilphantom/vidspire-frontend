@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { 
@@ -8,7 +7,6 @@ import {
   CheckCircle2, Tags, Youtube, Eye, ThumbsUp, X
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
