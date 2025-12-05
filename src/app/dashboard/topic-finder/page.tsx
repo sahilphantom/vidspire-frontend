@@ -1,9 +1,7 @@
 "use client"
-
 import { useState } from "react"
 import { Search, TrendingUp, BarChart2, Zap, AlertTriangle, ArrowRight, Loader2, Target } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
