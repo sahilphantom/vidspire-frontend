@@ -12,7 +12,7 @@ export default function Home() {
         <ProblemSection />
         <SolutionSection />
       <FeaturesSection />
-      {/* <CTASection /> */}
+      <CTASection />
       <FAQSection />
     </main>
   );
