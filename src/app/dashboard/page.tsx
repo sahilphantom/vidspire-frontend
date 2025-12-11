@@ -9,7 +9,6 @@ import {
   Brain,
   Zap,
   Eye,
-  FileText,
   Sparkles
 } from "lucide-react"
 
@@ -17,6 +16,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { Space_Grotesk, Outfit } from "next/font/google";
+
+
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
+
 
 const toolCards = [
   {
@@ -27,14 +43,7 @@ const toolCards = [
     darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
     iconColor: "text-[#B02E2B]",
   },
-  {
-    title: "Viral Gap Detector",
-    description: "Identify high-demand, low-supply 'Blue Ocean' topics to rank #1.",
-    icon: Search,
-    href: "/dashboard/topic-finder",
-    darkClass: "bg-[#180505] border-[#B02E2B] hover:border-[#B02E2B]/50 text-red-100",
-    iconColor: "text-[#B02E2B]",
-  },
+  // Removed Viral Gap Detector card as requested
   {
     title: "Advanced Viral Search",
     description: "Filter by 'Views Per Subscriber' to find small channels pulling massive numbers.",
@@ -55,12 +64,13 @@ const toolCards = [
 
 export default function DashboardPage() {
   return (
-    <div className="max-w-7xl space-y-10 mx-auto">
+    <div className={`max-w-7xl ${outfit.className} space-y-10 mx-auto pb-10`}>
       
       {/* Quick Access Cards */}
       <section>
         <h2 className="text-sm font-semibold text-neutral-300 mb-4">Quick Access</h2>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        {/* Updated grid to be responsive: 1 col on mobile, 3 on lg since we removed one card */}
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {toolCards.map((tool) => {
             const Icon = tool.icon
             return (
@@ -87,19 +97,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Recent Analyses (Empty State) */}
-      <section>
-        <h2 className="text-sm font-semibold text-neutral-300 mb-4">Recent Missions</h2>
-        <Card className="bg-neutral-900/50 border-neutral-800 border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="rounded-full bg-neutral-800/50 p-3 mb-3">
-              <MessageSquare className="w-5 h-5 text-neutral-500" />
-            </div>
-            <p className="text-sm font-medium text-neutral-400">Intelligence Log Empty</p>
-            <p className="text-xs mt-1 text-neutral-500">You haven't run any missions yet.</p>
-          </CardContent>
-        </Card>
-      </section>
+      {/* Removed "Recent Analyses" Section as requested */}
 
       {/* Get Started Section */}
       <section>
@@ -115,13 +113,11 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="z-10 relative">
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
+            <div className="grid gap-4 grid-cols-1 justify-between md:grid-cols-4">
               <Link href="/dashboard/comment-analyzer" className="w-full">
                 <Button variant="outline" className="bg-[#B02E2B]/50 border-red-500/20 hover:bg-[#2b0c0c] text-white h-12 w-full">Mine Comments</Button>
               </Link>
-              <Link href="/dashboard/topic-finder" className="w-full">
-                <Button variant="outline" className="bg-[#B02E2B]/50 border-red-500/20 hover:bg-[#2b0c0c] text-white h-12 w-full">Find Gaps</Button>
-              </Link>
+              {/* Removed Find Gaps button since the feature was removed from view */}
               <Link href="/dashboard/viral-search" className="w-full">
                 <Button variant="outline" className="bg-[#B02E2B]/50 border-red-500/20 hover:bg-[#2b0c0c] text-white h-12 w-full">Hunt Outliers</Button>
               </Link>

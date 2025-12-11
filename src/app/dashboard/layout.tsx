@@ -7,15 +7,12 @@ import {
   Search,
   CheckCircle,
   Settings,
-  ArrowRight,
-  Brain,
-  Zap,
-  Eye,
-  FileText,
   PanelLeftClose,
   PanelLeftOpen,
   Sun,
   Moon,
+  Menu, // Added Menu icon
+  X,    // Added Close icon
 } from "lucide-react"
 import { useState, useEffect, createContext, useContext } from "react"
 import { usePathname } from "next/navigation"
@@ -38,9 +35,21 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import { Space_Grotesk, Outfit } from "next/font/google";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
 
 // --- Theme Context ---
 type Theme = "dark" | "light"
@@ -64,7 +73,7 @@ const useTheme = () => {
 const menuItems = [
   { title: "Command Center", icon: BarChart3, href: "/dashboard" },
   { title: "Audience Mind-Reader", icon: MessageSquare, href: "/dashboard/comment-analyzer" },
-  { title: "Viral Gap Detector", icon: Search, href: "/dashboard/topic-finder" },
+  // Removed Viral Gap Detector from Menu as requested
   { title: "Advanced Viral Search", icon: TrendingUp, href: "/dashboard/viral-search" },
   { title: "Risk Audit", icon: CheckCircle, href: "/dashboard/idea-validator" },
   { title: "Settings", icon: Settings, href: "/dashboard/settings", disabled: true },
@@ -75,12 +84,19 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true)
+  // CHANGED: Initialized to false so it is expanded by default
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false) // New Mobile State
   const [theme, setTheme] = useState<Theme>("dark")
   const pathname = usePathname()
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed)
+  }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
   const toggleTheme = () => {
@@ -99,13 +115,141 @@ export default function DashboardLayout({
     document.documentElement.classList.add(initialTheme)
   }, [])
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
+
   // Styles Helpers
   const getBgColor = () => theme === "dark" ? "bg-black" : "bg-white"
   const getTextColor = () => theme === "dark" ? "text-white" : "text-gray-900"
   const getSidebarBg = () => theme === "dark" ? "bg-black" : "bg-white"
   const getSidebarBorder = () => theme === "dark" ? "border-neutral-900" : "border-gray-200"
-  const getHeaderText = () => theme === "dark" ? "text-neutral-300" : "text-gray-700"
   const getDescriptionText = () => theme === "dark" ? "text-neutral-500" : "text-gray-500"
+
+  // Sidebar Component (Reused for Desktop and Mobile)
+  const SidebarContentBlock = () => (
+    <>
+      <SidebarHeader className={`px-6 py-6 ${isSidebarCollapsed ? "md:px-2" : ""}`}>
+        <Link href={"/"}>
+          <div className="flex items-center">
+            <div className="flex items-center justify-center">
+              <img
+                src="/assets/vidspirelogo.png"
+                alt="Videspire Logo"
+                width={80}
+                height={80}
+                className={`object-contain transition-all duration-300 ${
+                  isSidebarCollapsed ? "w-16 h-16" : "w-20 h-20 -my-6"
+                }`}
+              />
+            </div>
+            {!isSidebarCollapsed && (
+              <div>
+                <h2 className={`font-bold ${getTextColor()} ${spaceGrotesk.className} text-lg tracking-wide`}>Vidly</h2>
+              </div>
+            )}
+          </div>
+        </Link>
+      </SidebarHeader>
+
+      <SidebarContent className={`px-4 ${isSidebarCollapsed ? "md:px-2" : ""}`}>
+        <SidebarGroup>
+          {!isSidebarCollapsed && (
+            <div className="px-2 pb-3 pt-2">
+              <span className={`${theme === "dark" ? "text-neutral-600" : "text-gray-500"} text-[11px] font-bold tracking-wider uppercase`}>Tools</span>
+            </div>
+          )}
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {menuItems.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    {isSidebarCollapsed ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuButton
+                            asChild
+                            disabled={item.disabled}
+                            className={`h-11 w-full justify-center rounded-md px-0 transition-all duration-200 ${
+                              isActive
+                                ? "bg-[#B02E2B] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
+                                : `${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`
+                            }`}
+                          >
+                            <Link href={item.disabled ? "#" : item.href} className="flex items-center justify-center">
+                              <item.icon 
+                                className={`h-4 w-4 ${
+                                  isActive ? "text-white" : `${theme === "dark" ? "text-neutral-500 group-hover:text-white" : "text-gray-400 group-hover:text-gray-800"}`
+                                }`} 
+                              />
+                            </Link>
+                          </SidebarMenuButton>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className={`${theme === "dark" ? "bg-neutral-900 border-neutral-800 text-white" : "bg-white border-gray-200 text-gray-900"}`}>
+                          <p className="font-medium">{item.title}</p>
+                          {item.disabled && (
+                            <p className={`text-xs ${theme === "dark" ? "text-neutral-400" : "text-gray-500"} mt-1`}>Coming soon</p>
+                          )}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <SidebarMenuButton
+                        asChild
+                        disabled={item.disabled}
+                        className={`h-11 w-full justify-start rounded-md px-3 transition-all duration-200 ${
+                          isActive
+                            ? "bg-[#B02E2B] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
+                            : `${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}`
+                        }`}
+                      >
+                        <Link href={item.disabled ? "#" : item.href} className="flex items-center">
+                          <item.icon 
+                            className={`mr-3 h-4 w-4 ${
+                              isActive ? "text-white" : `${theme === "dark" ? "text-neutral-500 group-hover:text-white" : "text-gray-500 group-hover:text-gray-800"}`
+                            }`} 
+                          />
+                          <span className="font-medium text-sm">{item.title}</span>
+                          {item.disabled && (
+                            <Badge className={`ml-auto text-[10px] h-5 ${theme === "dark" ? "bg-neutral-900 text-neutral-500 border-neutral-800" : "bg-gray-200 text-gray-600 border-gray-300"} px-1.5 hover:bg-neutral-900`}>
+                              Coming
+                            </Badge>
+                          )}
+                        </Link>
+                      </SidebarMenuButton>
+                    )}
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {!isSidebarCollapsed && (
+          <div className={`mt-auto px-3 py-4 border-t ${theme === "dark" ? "border-neutral-900" : "border-gray-200"}`}>
+            <Button
+              variant="ghost"
+              className={`w-full justify-start ${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}`}
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="mr-3 h-4 w-4" />
+                  <span className="font-medium text-sm">Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="mr-3 h-4 w-4" />
+                  <span className="font-medium text-sm">Dark Mode</span>
+                </>
+              )}
+            </Button>
+          </div>
+        )}
+      </SidebarContent>
+    </>
+  )
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -113,143 +257,68 @@ export default function DashboardLayout({
         <SidebarProvider style={{ "--sidebar-width": "16rem" } as React.CSSProperties}>
           <div className={`flex h-screen w-full ${getBgColor()} ${getTextColor()} overflow-hidden transition-colors duration-300`}>
             
-            {/* --- SIDEBAR --- */}
+            {/* --- DESKTOP SIDEBAR --- */}
             <div 
               className={`hidden md:block transition-all duration-300 ease-in-out border-r ${getSidebarBorder()} ${getSidebarBg()} ${
                 isSidebarCollapsed ? "w-16" : "w-64"
               }`}
             >
               <Sidebar collapsible="none" className={`h-full w-full border-none ${getSidebarBg()}`}>
-                <SidebarHeader className={`px-6 py-6 ${isSidebarCollapsed ? "px-2" : ""}`}>
-                  <Link href={"/"}>
-                    <div className="flex items-center">
-                      <div className="flex items-center justify-center">
-                        <img
-                          src="/assets/vidspirelogo.png"
-                          alt="Videspire Logo"
-                          width={80}
-                          height={80}
-                          className={`object-contain transition-all duration-300 ${
-                            isSidebarCollapsed ? "w-16 h-16" : "w-20 h-20 -my-6"
-                          }`}
-                        />
-                      </div>
-                      {!isSidebarCollapsed && (
-                        <div>
-                          <h2 className={`font-bold ${getTextColor()} text-lg tracking-wide`}>Vidly</h2>
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                </SidebarHeader>
-
-                <SidebarContent className={`px-4 ${isSidebarCollapsed ? "px-2" : ""}`}>
-                  <SidebarGroup>
-                    {!isSidebarCollapsed && (
-                      <div className="px-2 pb-3 pt-2">
-                        <span className={`${theme === "dark" ? "text-neutral-600" : "text-gray-500"} text-[11px] font-bold tracking-wider uppercase`}>Tools</span>
-                      </div>
-                    )}
-                    <SidebarGroupContent>
-                      <SidebarMenu className="space-y-1">
-                        {menuItems.map((item) => {
-                          const isActive = pathname === item.href
-                          return (
-                            <SidebarMenuItem key={item.title}>
-                              {isSidebarCollapsed ? (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <SidebarMenuButton
-                                      asChild
-                                      disabled={item.disabled}
-                                      className={`h-11 w-full justify-center rounded-md px-0 transition-all duration-200 ${
-                                        isActive
-                                          ? "bg-[#B02E2B] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
-                                          : `${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`
-                                      }`}
-                                    >
-                                      <Link href={item.disabled ? "#" : item.href} className="flex items-center justify-center">
-                                        <item.icon 
-                                          className={`h-4 w-4 ${
-                                            isActive ? "text-white" : `${theme === "dark" ? "text-neutral-500 group-hover:text-white" : "text-gray-400 group-hover:text-gray-800"}`
-                                          }`} 
-                                        />
-                                      </Link>
-                                    </SidebarMenuButton>
-                                  </TooltipTrigger>
-                                  <TooltipContent side="right" className={`${theme === "dark" ? "bg-neutral-900 border-neutral-800 text-white" : "bg-white border-gray-200 text-gray-900"}`}>
-                                    <p className="font-medium">{item.title}</p>
-                                    {item.disabled && (
-                                      <p className={`text-xs ${theme === "dark" ? "text-neutral-400" : "text-gray-500"} mt-1`}>Coming soon</p>
-                                    )}
-                                  </TooltipContent>
-                                </Tooltip>
-                              ) : (
-                                <SidebarMenuButton
-                                  asChild
-                                  disabled={item.disabled}
-                                  className={`h-11 w-full justify-start rounded-md px-3 transition-all duration-200 ${
-                                    isActive
-                                      ? "bg-[#B02E2B] text-white shadow-[0_0_15px_rgba(214,33,30,0.3)] hover:bg-[#b02e2b]"
-                                      : `${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}`
-                                  }`}
-                                >
-                                  <Link href={item.disabled ? "#" : item.href} className="flex items-center">
-                                    <item.icon 
-                                      className={`mr-3 h-4 w-4 ${
-                                        isActive ? "text-white" : `${theme === "dark" ? "text-neutral-500 group-hover:text-white" : "text-gray-500 group-hover:text-gray-800"}`
-                                      }`} 
-                                    />
-                                    <span className="font-medium text-sm">{item.title}</span>
-                                    {item.disabled && (
-                                      <Badge className={`ml-auto text-[10px] h-5 ${theme === "dark" ? "bg-neutral-900 text-neutral-500 border-neutral-800" : "bg-gray-200 text-gray-600 border-gray-300"} px-1.5 hover:bg-neutral-900`}>
-                                        Coming
-                                      </Badge>
-                                    )}
-                                  </Link>
-                                </SidebarMenuButton>
-                              )}
-                            </SidebarMenuItem>
-                          )
-                        })}
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </SidebarGroup>
-
-                  {!isSidebarCollapsed && (
-                    <div className={`mt-auto px-3 py-4 border-t ${theme === "dark" ? "border-neutral-900" : "border-gray-200"}`}>
-                      <Button
-                        variant="ghost"
-                        className={`w-full justify-start ${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}`}
-                        onClick={toggleTheme}
-                      >
-                        {theme === "dark" ? (
-                          <>
-                            <Sun className="mr-3 h-4 w-4" />
-                            <span className="font-medium text-sm">Light Mode</span>
-                          </>
-                        ) : (
-                          <>
-                            <Moon className="mr-3 h-4 w-4" />
-                            <span className="font-medium text-sm">Dark Mode</span>
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  )}
-                </SidebarContent>
+                <SidebarContentBlock />
               </Sidebar>
+            </div>
+
+            {/* --- MOBILE SIDEBAR (Drawer) --- */}
+            {/* Overlay */}
+            <div 
+              className={`fixed inset-0 z-40 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+                isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            {/* Menu Panel */}
+            <div 
+              className={`fixed top-0 left-0 z-50 h-full w-64 ${getSidebarBg()} border-r ${getSidebarBorder()} transition-transform duration-300 ease-in-out md:hidden ${
+                isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
+            >
+              {/* Close Button for Mobile */}
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`absolute right-4 top-4 p-2 rounded-md ${theme === "dark" ? "text-neutral-400 hover:bg-neutral-900" : "text-gray-600 hover:bg-gray-100"}`}
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              {/* Force sidebar uncollapsed for mobile view */}
+              <div className="pt-2">
+                 {/* Hack: Temporarily mock collapsed state to false for rendering content in mobile drawer */}
+                 <Sidebar collapsible="none" className={`h-full w-full border-none ${getSidebarBg()}`}>
+                    {/* Render content passing specific collapsed state if needed, or rely on logic inside */}
+                    <SidebarContentBlock />
+                 </Sidebar>
+              </div>
             </div>
 
             {/* --- MAIN CONTENT WRAPPER --- */}
             <div className={`flex flex-1 flex-col overflow-hidden ${getBgColor()}`}>
               
               {/* Header */}
-              <header className={`flex h-18 items-center justify-between px-8 py-4 ${theme === "dark" ? "border-b border-neutral-900" : "border-b border-gray-200"}`}>
+              <header className={`flex h-18 items-center justify-between px-4 md:px-8 py-4 ${theme === "dark" ? "border-b border-neutral-900" : "border-b border-gray-200"}`}>
                 <div className="flex items-center gap-4">
+                  {/* Mobile Menu Button */}
                   <div className="md:hidden">
-                    <SidebarTrigger />
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={toggleMobileMenu}
+                      className={theme === "dark" ? "text-neutral-400" : "text-gray-600"}
+                    >
+                      <Menu className="h-6 w-6" />
+                    </Button>
                   </div>
+
+                  {/* Desktop Collapse Button */}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -278,7 +347,7 @@ export default function DashboardLayout({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className={`h-9 w-9 ${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
+                  className={`hidden md:flex h-9 w-9 ${theme === "dark" ? "text-neutral-400 hover:text-white hover:bg-neutral-900" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
                   onClick={toggleTheme}
                 >
                   {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -287,9 +356,9 @@ export default function DashboardLayout({
 
               {/* DYNAMIC CONTENT INJECTED HERE */}
               <main className={`flex-1 overflow-y-auto py-4 transition-all duration-300 ease-in-out ${
-                isSidebarCollapsed ? "pl-8 pr-8" : "pl-8 pr-8" 
+                isSidebarCollapsed ? "px-4 md:px-8" : "px-4 md:px-8" 
               }`}>
-                 {children}
+                  {children}
               </main>
 
             </div>

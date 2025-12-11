@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Space_Grotesk, Outfit } from "next/font/google"; 
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers"; 
+import { GlobalFeedback } from "../components/feedback/global-feedback";
 
 // 2. Configure Space Grotesk
 const spaceGrotesk = Space_Grotesk({
@@ -37,6 +38,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           {children}
+          <GlobalFeedback />
         </ThemeProvider>
         <SpeedInsights />
       </body>
