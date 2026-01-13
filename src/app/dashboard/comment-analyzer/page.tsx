@@ -493,13 +493,13 @@ export default function VideoAnalysisPage() {
         <div className="max-w-7xl mx-auto">
           
           {/* TOP BAR */}
-          <div className="flex justify-between items-center mb-8 border-b border-neutral-200 dark:border-neutral-800 pb-6">
-            <div className="flex flex-col items-start">
-              <h1 className={`text-3xl sm:text-4xl font-bold flex items-center gap-3 ${spaceGrotesk.className}`}>
+          <div className="flex justify-center items-center mb-8 border-b border-neutral-200 dark:border-neutral-800 pb-6">
+            <div className="flex flex-col items-start ">
+              <h1 className={`text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#B02E2B] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent flex items-center gap-3 ${spaceGrotesk.className}`}>
                 <span className="bg-[#B02E2B]/10 p-2 rounded-lg"><Zap className="w-8 h-8 text-[#B02E2B]" /></span>
                 Audience Mind-Reader
               </h1>
-              <p className="text-neutral-500 dark:text-neutral-400 mt-2 text-lg">
+              <p className="text-neutral-500 dark:text-neutral-400 mt-2 text-lg max-w-2xl mx-auto">
                 AI-powered comment analysis & sentiment tracking.
               </p>
             </div>

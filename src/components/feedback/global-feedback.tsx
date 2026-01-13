@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 const TOOLS = [
   "Audience Mind-Reader",
   "Advanced Viral Search",
-  "Risk Audit",
+  "Video Idea Validator",
   "General Feedback"
 ];
 

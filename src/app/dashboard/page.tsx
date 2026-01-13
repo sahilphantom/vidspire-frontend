@@ -53,7 +53,7 @@ const toolCards = [
     iconColor: "text-[#B02E2B]",
   },
   {
-    title: "Pre-Production Risk Audit",
+    title: "Video Idea Validator",
     description: "Simulate your video's performance against historical data before you film.",
     icon: Zap,
     href: "/dashboard/idea-validator",

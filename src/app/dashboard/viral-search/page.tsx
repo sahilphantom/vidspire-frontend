@@ -100,14 +100,14 @@ export default function AdvancedViralSearchPage() {
     <div className="h-full flex flex-col p-6 max-w-7xl mx-auto space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
+      <div className="flex justify-center items-center flex-col gap-2">
+        <div className="flex  items-center gap-3">
             <div className="p-2 bg-[#B02E2B]/10 rounded-lg">
                 <TrendingUp className="w-6 h-6 text-[#B02E2B]" />
             </div>
-            <h1 className="text-3xl font-bold font-heading text-white">Advanced Viral Search</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#B02E2B] via-[#C83E3A] to-[#B02E2B] bg-clip-text text-transparent">Advanced Viral Search</h1>
         </div>
-        <p className="text-neutral-400 max-w-2xl">
+        <p className="text-neutral-400 text-lg max-w-2xl">
           Filter by <span className="text-[#B02E2B] font-bold">'Views Per Subscriber'</span> to find small channels pulling massive numbers.
         </p>
       </div>

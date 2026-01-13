@@ -75,7 +75,7 @@ const menuItems = [
   { title: "Audience Mind-Reader", icon: MessageSquare, href: "/dashboard/comment-analyzer" },
   // Removed Viral Gap Detector from Menu as requested
   { title: "Advanced Viral Search", icon: TrendingUp, href: "/dashboard/viral-search" },
-  { title: "Risk Audit", icon: CheckCircle, href: "/dashboard/idea-validator" },
+  { title: "Idea Validator", icon: CheckCircle, href: "/dashboard/idea-validator" },
   { title: "Settings", icon: Settings, href: "/dashboard/settings", disabled: true },
 ]
 

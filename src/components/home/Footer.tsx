@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
               </span>
             </Link>
             <p className={`text-gray-600 ${outfit.className} dark:text-zinc-400 leading-relaxed pr-4`}>
-              Explore the latest AI solutions from VideSpire to skyrocket your YouTube channel's growth and engagement.
+              Unlock AI-powered insights to transform your YouTube strategy and maximize channel performance.
             </p>
             {/* Social Media Icons */}
             <div className="flex items-center gap-4">
