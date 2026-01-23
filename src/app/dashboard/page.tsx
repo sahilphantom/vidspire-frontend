@@ -28,17 +28,17 @@ import { useEffect, useState } from "react";
 function RecentAnalysesSection() {
   const [recentJobs, setRecentJobs] = useState<
     Array<{
-      videoUrl: string;
-      videoId: string;
-      jobId: string;
-      createdAt: number;
-      status?:  "pending" | "processing" | "completed" | "failed";
-      isLoading?: boolean;
+      videoUrl: string,
+      videoId: string,
+      jobId: string,
+      createdAt: number,
+      status?: "pending" | "processing" | "completed" | "failed",
+      isLoading?: boolean,
     }>
   >([]);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    // Fetch history from localStorage
     const getHistory = () => {
       try {
         const data = localStorage.getItem("yt_analyzer_history");
@@ -54,12 +54,11 @@ function RecentAnalysesSection() {
       jobId: string;
       createdAt: number;
     }[] = getHistory();
-    setRecentJobs(
-      history.slice(0, 5).map((job) => ({ ...job, isLoading: true })),
-    );
+    
+    setRecentJobs(history.map((job) => ({ ...job, isLoading: true })));
 
     // Fetch status for each job
-    history.slice(0, 5).forEach(async (job) => {
+    history.forEach(async (job) => {
       try {
         const response = await fetch(
           `http://localhost:5000/api/video/status/${job.jobId}`,
@@ -97,6 +96,8 @@ function RecentAnalysesSection() {
 
   if (recentJobs.length === 0) return null;
 
+  const displayedJobs = showAll ? recentJobs : recentJobs.slice(0, 6);
+
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -115,7 +116,7 @@ function RecentAnalysesSection() {
   const getStatusBadge = (job: (typeof recentJobs)[0]) => {
     if (job.isLoading) {
       return (
-        <Badge className="bg-neutral-800 text-neutral-400 text-[10px] h-5">
+        <Badge className="bg-neutral-800 text-neutral-400 text-[10px] h-5 font-mono">
           Checking...
         </Badge>
       );
@@ -124,99 +125,153 @@ function RecentAnalysesSection() {
     switch (job.status) {
       case "completed":
         return (
-          <Badge className="bg-green-900/30 text-green-400 border-green-500/20 text-[10px] h-5">
+          <Badge className="bg-green-900/30 text-green-400 border border-green-500/20 text-[10px] h-5 font-mono">
             <CheckCircle className="w-3 h-3 mr-1" />
-            Ready
+            Completed
           </Badge>
         );
-      case 'processing':
+      case "processing":
         return (
-          <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-500/20 text-[10px] h-5">
-            Processing...
+          <Badge className="bg-yellow-900/30 text-yellow-400 border border-yellow-500/20 text-[10px] h-5 font-mono">
+            Processing
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-red-900/30 text-red-400 border-red-500/20 text-[10px] h-5">
+          <Badge className="bg-red-900/30 text-red-400 border border-red-500/20 text-[10px] h-5 font-mono">
             Failed
           </Badge>
         );
     }
   };
 
-  const extractVideoTitle = (url: string) => {
-    try {
-      const urlObj = new URL(url);
-      return urlObj.hostname.replace("www.", "");
-    } catch {
-      return url.substring(0, 40) + "...";
-    }
+  const getThumbnailUrl = (videoId: string) => {
+    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   };
 
   return (
     <section>
-      <h2 className="text-sm font-semibold text-neutral-300 mb-4">
-        Recent Analyses
-      </h2>
-      <Card className="bg-[#080808] border-neutral-800">
-        <CardContent className="p-6">
-          <div className="space-y-3">
-            {recentJobs.map((job) => {
-              const isCompleted = job.status === "completed" && !job.isLoading;
-              const Content = (
-                <div
-                  className={`
-                    group h-16 rounded-md border bg-[#0f0f0f] flex items-center px-4 justify-between
-                    transition-all duration-200
-                    ${
-                      isCompleted
-                        ? "border-[#B02E2B]/30 hover:border-[#B02E2B] hover:bg-[#180505] cursor-pointer"
-                        : "border-neutral-800 opacity-60 cursor-not-allowed"
-                    }
-                  `}
-                >
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <MessageSquare
-                      className={`w-4 h-4 flex-shrink-0 ${isCompleted ? "text-[#B02E2B]" : "text-neutral-600"}`}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className={`text-sm font-medium truncate ${isCompleted ? "text-white group-hover:text-red-100" : "text-neutral-500"}`}
-                      >
-                        {extractVideoTitle(job.videoUrl)}
-                      </p>
-                      <p className="text-[10px] text-neutral-600 font-mono truncate">
-                        ID: {job.jobId.substring(0, 16)}...
-                      </p>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-semibold text-neutral-300">
+          Recent Analyses
+        </h2>
+        {recentJobs.length > 6 && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-xs text-[#B02E2B] hover:text-[#d6211e] transition-colors font-medium"
+          >
+            {showAll ? "Show Less" : `See All (${recentJobs.length})`}
+          </button>
+        )}
+      </div>
+
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {displayedJobs.map((job) => {
+          const isCompleted = job.status === "completed" && !job.isLoading;
+          const CardContent = (
+            <div
+              className={`
+                group rounded-xl border overflow-hidden transition-all duration-200
+                ${
+                  isCompleted
+                    ? "bg-[#0f0f0f] border-[#B02E2B]/30 hover:border-[#B02E2B] hover:shadow-lg hover:shadow-[#B02E2B]/10 cursor-pointer"
+                    : "bg-[#0a0a0a] border-neutral-800 opacity-60 cursor-not-allowed"
+                }
+              `}
+            >
+              {/* Thumbnail */}
+              <div className="relative w-full aspect-video bg-neutral-900 overflow-hidden">
+                <img
+                  src={getThumbnailUrl(job.videoId)}
+                  alt="Video thumbnail"
+                  className={`w-full h-full object-cover transition-transform duration-300 ${
+                    isCompleted ? "group-hover:scale-105" : ""
+                  }`}
+                  onError={(e) => {
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='360' fill='%23171717'%3E%3Crect width='480' height='360' fill='%23171717'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='14' fill='%23525252'%3ENo Thumbnail%3C/text%3E%3C/svg%3E";
+                  }}
+                />
+                
+                {/* Status Badge Overlay */}
+                <div className="absolute top-2 right-2">
+                  {getStatusBadge(job)}
+                </div>
+
+                {/* Completed Overlay Icon */}
+                {isCompleted && (
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="bg-[#B02E2B] rounded-full p-3">
+                      <ArrowRight className="w-5 h-5 text-white" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="text-xs text-neutral-500">
+                )}
+              </div>
+
+              {/* Info Section */}
+              <div className="p-4 space-y-3">
+                {/* URL */}
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                    Video URL
+                  </p>
+                  <p
+                    className={`text-xs font-mono truncate ${
+                      isCompleted
+                        ? "text-neutral-300 group-hover:text-white"
+                        : "text-neutral-600"
+                    }`}
+                  >
+                    {job.videoUrl}
+                  </p>
+                </div>
+
+                {/* Job ID and Time */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                      Job ID
+                    </p>
+                    <p className="text-xs font-mono text-neutral-400 truncate">
+                      {job.jobId.substring(0, 8)}...
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                      Created
+                    </p>
+                    <p className="text-xs font-mono text-neutral-400">
                       {formatDate(job.createdAt)}
-                    </span>
-                    {getStatusBadge(job)}
-                    {isCompleted && (
-                      <ArrowRight className="w-4 h-4 text-neutral-600 group-hover:text-[#B02E2B] transition-colors" />
-                    )}
+                    </p>
                   </div>
                 </div>
-              );
+              </div>
+            </div>
+          );
 
-              return isCompleted ? (
-                <Link
-                  key={job.jobId}
-                  href={`/dashboard/comment-analyzer?jobId=${job.jobId}`}
-                  className="block"
-                >
-                  {Content}
-                </Link>
-              ) : (
-                <div key={job.jobId}>{Content}</div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+          return isCompleted ? (
+            <Link
+              key={job.jobId}
+              href={`/dashboard/comment-analyzer?jobId=${job.jobId}`}
+            >
+              {CardContent}
+            </Link>
+          ) : (
+            <div key={job.jobId}>{CardContent}</div>
+          );
+        })}
+      </div>
+
+      {/* Show More Button (Mobile-friendly alternative) */}
+      {recentJobs.length > 6 && !showAll && (
+        <div className="mt-4 text-center lg:hidden">
+          <button
+            onClick={() => setShowAll(true)}
+            className="text-sm text-[#B02E2B] hover:text-[#d6211e] transition-colors font-medium"
+          >
+            Load More ({recentJobs.length - 6} more)
+          </button>
+        </div>
+      )}
     </section>
   );
 }
@@ -308,55 +363,7 @@ export default function DashboardPage() {
 
       {/* Removed "Recent Analyses" Section as requested */}
       <RecentAnalysesSection />
-      {/* Get Started Section */}
-      <section>
-        <h2 className="text-sm font-bold text-neutral-200 mb-4">Get Started</h2>
-        <Card className="bg-gradient-to-r from-[#1a0505] to-[#1a0505] border-[#B02E2B] overflow-hidden relative">
-          <CardHeader className="pb-8 z-10 relative">
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle className="text-xl font-bold text-white mb-2">
-                  Launch Your First Mission
-                </CardTitle>
-                <CardDescription className="text-neutral-400">
-                  Pick an intelligence tool to analyze the market.
-                </CardDescription>
-              </div>
-              <Sparkles className="w-5 h-5 text-[#d6211e]" />
-            </div>
-          </CardHeader>
-          <CardContent className="z-10 relative">
-            <div className="grid gap-4 grid-cols-1 justify-between md:grid-cols-4">
-              <Link href="/dashboard/comment-analyzer" className="w-full">
-                <Button
-                  variant="outline"
-                  className="bg-[#B02E2B]/50 border-red-500/20 hover:bg-[#2b0c0c] text-white h-12 w-full"
-                >
-                  Mine Comments
-                </Button>
-              </Link>
-              {/* Removed Find Gaps button since the feature was removed from view */}
-              <Link href="/dashboard/viral-search" className="w-full">
-                <Button
-                  variant="outline"
-                  className="bg-[#B02E2B]/50 border-red-500/20 hover:bg-[#2b0c0c] text-white h-12 w-full"
-                >
-                  Hunt Outliers
-                </Button>
-              </Link>
-              <Link href="/dashboard/idea-validator" className="w-full">
-                <Button
-                  variant="outline"
-                  className="bg-[#B02E2B]/50 border-red-500/20 hover:bg-[#2b0c0c] text-white h-12 w-full"
-                >
-                  Audit Risk
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
+    
       {/* Coming Soon Section */}
       <section>
         <h2 className="text-sm font-bold text-neutral-200 mb-4">
