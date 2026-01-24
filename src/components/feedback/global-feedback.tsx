@@ -278,7 +278,7 @@ export function GlobalFeedback() {
 
                       {/* Form Note */}
                       <p className="text-xs text-neutral-500 text-center pt-2">
-                        Your feedback helps us improve VidSpire for everyone
+                        Your feedback helps us improve Vidly for everyone
                       </p>
                     </form>
                   ) : (
@@ -288,7 +288,7 @@ export function GlobalFeedback() {
                       </div>
                       <div>
                         <h4 className="font-bold text-lg text-neutral-900 dark:text-white">Thank You!</h4>
-                        <p className="text-sm text-neutral-500">Your feedback shapes VidSpire.</p>
+                        <p className="text-sm text-neutral-500">Your feedback shapes Vidly.</p>
                       </div>
                       <p className="text-xs text-neutral-400 pt-4">
                         You can close this window now
