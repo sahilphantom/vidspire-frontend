@@ -11,11 +11,12 @@ import {
   PanelLeftOpen,
   Sun,
   Moon,
-  Menu, // Added Menu icon
-  X,    // Added Close icon
+  Menu,
+  X,
 } from "lucide-react"
 import { useState, useEffect, createContext, useContext } from "react"
 import { usePathname } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -73,21 +74,45 @@ const useTheme = () => {
 const menuItems = [
   { title: "Command Center", icon: BarChart3, href: "/dashboard" },
   { title: "Audience Mind-Reader", icon: MessageSquare, href: "/dashboard/comment-analyzer" },
-  // Removed Viral Gap Detector from Menu as requested
   { title: "Advanced Viral Search", icon: TrendingUp, href: "/dashboard/viral-search" },
   { title: "Idea Validator", icon: CheckCircle, href: "/dashboard/idea-validator" },
   { title: "Settings", icon: Settings, href: "/dashboard/settings", disabled: true },
 ]
+
+// ✅ PAGE TRANSITION VARIANTS
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    x: -20,
+    filter: "blur(10px)",
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.4,
+      ease: [0.23, 1, 0.32, 1], // Custom easing for smooth motion
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: 20,
+    filter: "blur(10px)",
+    transition: {
+      duration: 0.3,
+      ease: [0.23, 1, 0.32, 1],
+    },
+  },
+}
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  // CHANGED: Initialized to false so it is expanded by default
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
-  
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false) // New Mobile State
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [theme, setTheme] = useState<Theme>("dark")
   const pathname = usePathname()
 
@@ -269,20 +294,17 @@ export default function DashboardLayout({
             </div>
 
             {/* --- MOBILE SIDEBAR (Drawer) --- */}
-            {/* Overlay */}
             <div 
               className={`fixed inset-0 z-40 bg-black/80 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
                 isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            {/* Menu Panel */}
             <div 
               className={`fixed top-0 left-0 z-50 h-full w-64 ${getSidebarBg()} border-r ${getSidebarBorder()} transition-transform duration-300 ease-in-out md:hidden ${
                 isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
               }`}
             >
-              {/* Close Button for Mobile */}
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`absolute right-4 top-4 p-2 rounded-md ${theme === "dark" ? "text-neutral-400 hover:bg-neutral-900" : "text-gray-600 hover:bg-gray-100"}`}
@@ -290,11 +312,8 @@ export default function DashboardLayout({
                 <X className="w-5 h-5" />
               </button>
               
-              {/* Force sidebar uncollapsed for mobile view */}
               <div className="pt-2">
-                 {/* Hack: Temporarily mock collapsed state to false for rendering content in mobile drawer */}
                  <Sidebar collapsible="none" className={`h-full w-full border-none ${getSidebarBg()}`}>
-                    {/* Render content passing specific collapsed state if needed, or rely on logic inside */}
                     <SidebarContentBlock />
                  </Sidebar>
               </div>
@@ -306,7 +325,6 @@ export default function DashboardLayout({
               {/* Header */}
               <header className={`flex h-18 items-center justify-between px-4 md:px-8 py-4 ${theme === "dark" ? "border-b border-neutral-900" : "border-b border-gray-200"}`}>
                 <div className="flex items-center gap-4">
-                  {/* Mobile Menu Button */}
                   <div className="md:hidden">
                     <Button 
                       variant="ghost" 
@@ -318,7 +336,6 @@ export default function DashboardLayout({
                     </Button>
                   </div>
 
-                  {/* Desktop Collapse Button */}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -354,11 +371,22 @@ export default function DashboardLayout({
                 </Button>
               </header>
 
-              {/* DYNAMIC CONTENT INJECTED HERE */}
-              <main className={`flex-1 overflow-y-auto py-4 transition-all duration-300 ease-in-out ${
+              {/* ✅ DYNAMIC CONTENT WITH PAGE TRANSITIONS */}
+              <main className={`flex-1 overflow-y-auto transition-all duration-300 ease-in-out ${
                 isSidebarCollapsed ? "px-4 md:px-8" : "px-4 md:px-8" 
               }`}>
-                  {children}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={pathname}
+                    variants={pageVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="py-4"
+                  >
+                    {children}
+                  </motion.div>
+                </AnimatePresence>
               </main>
 
             </div>

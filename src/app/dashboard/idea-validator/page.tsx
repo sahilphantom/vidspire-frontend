@@ -25,8 +25,12 @@ import {
   PieChart,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import { Space_Grotesk, Outfit } from "next/font/google";
+import { useRateLimit } from "@/hooks/useRateLimit";
+import { RateLimitIndicator } from "@/components/RateLimitIndicator";
+import { validateIdea, RateLimitError } from "@/lib/api";
+import { Toast, useToast } from "@/components/RateLimitToast";
+
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 const outfit = Outfit({ subsets: ["latin"] });
@@ -387,6 +391,10 @@ export default function VideoIdeaValidatorPage() {
   const [targetAudience, setTargetAudience] = useState("");
   const [goal, setGoal] = useState("");
   const [uiState, setUiState] = useState<UIState>({ type: "idle" });
+  
+  // Rate limit hooks
+  const { rateLimitInfo, updateRateLimit } = useRateLimit("idea-validator");
+  const { showError, showWarning, showSuccess, toasts, removeToast } = useToast();
 
   // ========================================
   // STREAMING HANDLER
@@ -394,13 +402,31 @@ export default function VideoIdeaValidatorPage() {
 
  
  const handleSubmit = async () => {
+  // Validate inputs
   if (!idea.trim() || !targetAudience.trim() || !goal.trim()) {
     setUiState({
       type: "failed",
       error: "Please fill in all fields",
       retryable: false,
     });
+    showError("Please fill in all fields");
     return;
+  }
+
+  // ✅ NEW: Check rate limit BEFORE processing
+  if (rateLimitInfo.isLimited) {
+    showError("Daily limit reached! Come back tomorrow for more validations.");
+    setUiState({
+      type: "failed",
+      error: "Daily limit reached. Please try again tomorrow.",
+      retryable: false,
+    });
+    return;
+  }
+
+  // ✅ NEW: Warn user on last use
+  if (rateLimitInfo.remaining === 1) {
+    showWarning("This is your last free validation today. Make it count!");
   }
 
   setUiState({
@@ -422,9 +448,28 @@ export default function VideoIdeaValidatorPage() {
       body: JSON.stringify({ idea, targetAudience, goal }),
     });
 
+    // ✅ UPDATED: Handle 429 rate limit response
+    if (response.status === 429) {
+      const errorData = await response.json();
+      
+      // Update rate limit info from headers
+      updateRateLimit(response.headers);
+      
+      throw new RateLimitError(
+        errorData.message || "Daily limit reached. Try again tomorrow!",
+        parseInt(response.headers.get('Retry-After') || '0', 10),
+        response.headers.get('X-RateLimit-Reset') || new Date().toISOString(),
+        parseInt(response.headers.get('X-RateLimit-Limit') || '2', 10),
+        parseInt(response.headers.get('X-RateLimit-Remaining') || '0', 10)
+      );
+    }
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    // ✅ NEW: Update rate limit info from successful response headers
+    updateRateLimit(response.headers);
 
     const reader = response.body?.getReader();
     const decoder = new TextDecoder();
@@ -517,12 +562,14 @@ export default function VideoIdeaValidatorPage() {
                 type: "completed",
                 result: result,
               });
+              showSuccess("Idea validation completed successfully!");
             } else {
               setUiState({
                 type: "failed",
                 error: data.data.error || "Validation failed",
                 retryable: true,
               });
+              showError(data.data.error || "Validation failed");
             }
           }
         } catch (parseError) {
@@ -532,11 +579,29 @@ export default function VideoIdeaValidatorPage() {
     }
   } catch (err: any) {
     console.error("❌ Submission error:", err);
-    setUiState({
-      type: "failed",
-      error: err.message || "An unexpected error occurred",
-      retryable: true,
-    });
+    
+    // ✅ UPDATED: Better rate limit error handling
+    if (err instanceof RateLimitError) {
+      updateRateLimit(new Headers({
+        'X-RateLimit-Limit': err.limit.toString(),
+        'X-RateLimit-Remaining': err.remaining.toString(),
+        'X-RateLimit-Reset': err.resetAt,
+      }));
+      
+      setUiState({
+        type: "failed",
+        error: err.message,
+        retryable: false,
+      });
+      showError(err.message);
+    } else {
+      setUiState({
+        type: "failed",
+        error: err.message || "An unexpected error occurred",
+        retryable: true,
+      });
+      showError(err.message || "An unexpected error occurred");
+    }
   }
 };
 
@@ -545,6 +610,7 @@ export default function VideoIdeaValidatorPage() {
     setIdea("");
     setTargetAudience("");
     setGoal("");
+    showInfo("Reset form");
   };
 
   const getScoreColor = (score: number) => {
@@ -607,7 +673,20 @@ export default function VideoIdeaValidatorPage() {
 
   return (
     <div className="min-h-screen bg-black p-4 sm:p-8">
+     
       <div className="max-w-6xl mx-auto">
+ {/* ✅  TOAST CONTAINER */}
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => removeToast(toast.id)}
+        />
+      ))}
+
+       
+        
         {/* Header with artistic elements */}
         <div className=" text-center mb-12 relative">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8">
@@ -626,6 +705,14 @@ export default function VideoIdeaValidatorPage() {
             AI-powered analysis of your YouTube video concepts with deep insights and strategic recommendations
           </p>
         </div>
+
+        {/* ✅  RATE LIMIT INDICATOR */}
+      {uiState.type === "idle" && (
+        <RateLimitIndicator 
+          featureName="idea-validator" 
+          displayName="Idea Validation"
+        />
+      )}
 
         {/* Input Section */}
         {uiState.type !== "completed" && (
@@ -682,15 +769,26 @@ export default function VideoIdeaValidatorPage() {
                   />
                 </div>
 
-                {uiState.type === "idle" && (
-                  <button
-                    onClick={handleSubmit}
-                    className="w-full px-8 py-5 bg-linear-to-r from-[#B02E2B] via-[#B02E2B] to-[#B02E2B] text-white rounded-xl font-bold hover:opacity-90 transition-all shadow-lg hover:shadow-xl hover:shadow-[#E55A52]/20 text-lg flex items-center justify-center gap-3 group cursor-pointer"
-                  >
-                    <Rocket className="w-5 h-5 group-hover:animate-bounce" />
-                    Validate Idea
-                  </button>
-                )}
+              {uiState.type === "idle" && (
+  <button
+    onClick={handleSubmit}
+    disabled={rateLimitInfo.isLimited}
+    className={`w-full px-8 py-5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 group transition-all shadow-lg ${
+      rateLimitInfo.isLimited
+        ? 'bg-neutral-700 text-neutral-400 cursor-not-allowed'
+        : 'bg-[#B02E2B] hover:opacity-90 text-white hover:shadow-xl hover:shadow-[#E55A52]/20'
+    }`}
+  >
+    {rateLimitInfo.isLimited ? (
+      <>Limit Reached</>
+    ) : (
+      <>
+        <Rocket className="w-5 h-5 group-hover:animate-bounce" />
+        Validate Idea
+      </>
+    )}
+  </button>
+)}
               </div>
             </div>
           </div>
@@ -1318,25 +1416,6 @@ export default function VideoIdeaValidatorPage() {
                 </div>
               </div>
             </div>
-
-            {/* Metadata
-            {uiState.result.metadata && (
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-center border border-gray-700">
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-400">
-                  <span className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    Processing Time: {uiState.result.metadata.processingTime}s
-                  </span>
-                  <span className="hidden sm:block">•</span>
-                  <span>
-                    Generated:{" "}
-                    {new Date(
-                      uiState.result.metadata.timestamp
-                    ).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-            )} */}
           </div>
         )}
       </div>

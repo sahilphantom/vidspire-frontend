@@ -10,6 +10,10 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
+import { RateLimitIndicator } from "@/components/RateLimitIndicator"
+import { Toast, ToastContainer, useToast } from "@/components/RateLimitToast"
+import { searchTopicsAdvanced, RateLimitError } from "@/lib/api"
+import { useRateLimit } from "@/hooks/useRateLimit"
 
 // ✅ FIXED: Updated types to match backend response
 interface VideoResult {
@@ -41,39 +45,62 @@ export default function AdvancedViralSearchPage() {
   const [outlierThreshold, setOutlierThreshold] = useState([200])
   const [contentType, setContentType] = useState<"all" | "longForm" | "shorts">("longForm") // Changed from "long" to "longForm"
   const [sortBy, setSortBy] = useState<"latest" | "bestMatch" | "mostViews" | "topRated">("latest") // Updated sort options
+  
+  // Rate limit hooks
+  const { rateLimitInfo, updateRateLimit } = useRateLimit("topic-search");
+  const { showError, showWarning, showSuccess, toasts, removeToast } = useToast();
 
   // ✅ FIXED: Updated API call to match backend endpoint
-  const handleSearch = async () => {
-    if (!query) return
-    setLoading(true)
-    setHasSearched(true)
-    setResults([])
+ const handleSearch = async () => {
+  if (!query) return;
 
-    try {
-      const params = new URLSearchParams({
-        query: query,
-        contentType: contentType, // ✅ Changed from videoType
-        sort: sortBy, // ✅ Now using correct values
-        viralScore: outlierThreshold[0].toString(), // ✅ Changed from outlierScore range
-        minViews: minViews[0].toString(), // ✅ Changed from views range
-        maxResults: "20",
-      })
-
-      // ✅ FIXED: Updated endpoint URL
-      const response = await fetch(`http://localhost:5000/api/topics/search-advanced?${params}`)
-      const data = await response.json()
-
-      if (data.success) {
-        setResults(data.data)
-      } else {
-        console.error("Search failed:", data.message)
-      }
-    } catch (error) {
-      console.error("Network error:", error)
-    } finally {
-      setLoading(false)
-    }
+  // ✅ NEW: Check rate limit before search
+  if (rateLimitInfo.isLimited) {
+    showError("Daily search limit reached! Come back tomorrow for more searches.");
+    return;
   }
+
+  if (rateLimitInfo.remaining === 1) {
+    showWarning("This is your last free search today. Make it count!");
+  }
+
+  setLoading(true);
+  setHasSearched(true);
+  setResults([]);
+
+  try {
+    // ✅ NEW: Use API wrapper instead of fetch
+    const { data, headers } = await searchTopicsAdvanced(query, {
+      contentType: contentType,
+      sort: sortBy,
+      viralScore: outlierThreshold[0],
+      minViews: minViews[0],
+      maxResults: 20,
+    });
+
+    // ✅ NEW: Update rate limit from headers
+    updateRateLimit(headers);
+    
+    setResults(data);
+    showSuccess(`Found ${data.length} viral videos!`);
+    
+  } catch (error: any) {
+    // ✅ NEW: Handle rate limit errors
+    if (error instanceof RateLimitError) {
+      updateRateLimit(new Headers({
+        'X-RateLimit-Limit': error.limit.toString(),
+        'X-RateLimit-Remaining': error.remaining.toString(),
+        'X-RateLimit-Reset': error.resetAt,
+      }));
+      showError(error.message);
+    } else {
+      console.error("Search error:", error);
+      showError("Search failed. Please try again.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
   // --- Helpers ---
   const formatNumber = (num: number) => {
@@ -98,9 +125,26 @@ export default function AdvancedViralSearchPage() {
 
   return (
     <div className="h-full flex flex-col p-6 max-w-7xl mx-auto space-y-8">
+      <ToastContainer />
+      {/* ✅ ADD TOAST CONTAINER */}
+    {toasts.map((toast) => (
+      <Toast
+        key={toast.id}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => removeToast(toast.id)}
+      />
+    ))}
       
       {/* Header */}
       <div className="flex justify-center items-center flex-col gap-2">
+       
+    {/* ✅ RATE LIMIT INDICATOR */}
+    <RateLimitIndicator 
+      featureName="topic-search" 
+      displayName="Topic Search"
+    />
+        
         <div className="flex  items-center gap-3">
             <div className="p-2 bg-[#B02E2B]/10 rounded-lg">
                 <TrendingUp className="w-6 h-6 text-[#B02E2B]" />
@@ -118,21 +162,31 @@ export default function AdvancedViralSearchPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
             <Input 
-              placeholder="Enter a niche (e.g., 'Coding Tutorials', 'Minecraft', 'Finance')" 
-              className="pl-10 h-12 bg-black border-neutral-800 text-white focus:border-[#B02E2B] focus:ring-[#B02E2B]/20"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
+  placeholder="Enter a niche (e.g., 'Coding Tutorials', 'Minecraft', 'Finance')" 
+  className="pl-10 h-12 bg-black border-neutral-800 text-white focus:border-[#B02E2B] focus:ring-[#B02E2B]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+  disabled={rateLimitInfo.isLimited || loading}
+/>
           </div>
           <Button 
-            className="h-12 px-8 bg-[#B02E2B] hover:bg-[#8a2422] text-white font-bold shadow-[0_0_15px_rgba(176,46,43,0.4)] transition-all hover:scale-105"
-            onClick={handleSearch}
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <PlayCircle className="w-5 h-5 mr-2" />}
-            {loading ? "Hunting..." : "Find Outliers"}
-          </Button>
+  className={`h-12 px-8 font-bold shadow-[0_0_15px_rgba(176,46,43,0.4)] transition-all hover:scale-105 ${
+    rateLimitInfo.isLimited
+      ? 'bg-neutral-800 hover:bg-neutral-800 text-neutral-400 cursor-not-allowed'
+      : 'bg-[#B02E2B] hover:bg-[#8a2422] text-white'
+  }`}
+  onClick={handleSearch}
+  disabled={loading || rateLimitInfo.isLimited}
+>
+  {loading ? (
+    <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Hunting...</>
+  ) : rateLimitInfo.isLimited ? (
+    <>Limit Reached</>
+  ) : (
+    <><PlayCircle className="w-5 h-5 mr-2" /> Find Outliers</>
+  )}
+</Button>
           <Button 
             variant="outline" 
             className={`h-12 px-4 border-neutral-800 bg-black text-neutral-400 hover:text-white ${showFilters ? 'border-[#B02E2B] text-[#B02E2B]' : ''}`}
@@ -163,28 +217,32 @@ export default function AdvancedViralSearchPage() {
                         className={`cursor-pointer justify-center py-2 ${sortBy === "latest" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
                         onClick={() => setSortBy("latest")}
                       >
-                        <Clock className="w-3 h-3 mr-1" /> Latest
+                        <Clock className="w-3 h-3 mr-1" />
+                        Latest
                       </Badge>
                       <Badge 
                         variant="outline"
                         className={`cursor-pointer justify-center py-2 ${sortBy === "bestMatch" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
                         onClick={() => setSortBy("bestMatch")}
                       >
-                        <TrendingUp className="w-3 h-3 mr-1" /> Best Match
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        Best Match
                       </Badge>
                       <Badge 
                         variant="outline"
                         className={`cursor-pointer justify-center py-2 ${sortBy === "mostViews" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
                         onClick={() => setSortBy("mostViews")}
                       >
-                        <Eye className="w-3 h-3 mr-1" /> Most Views
+                        <Eye className="w-3 h-3 mr-1" />
+                        Most Views
                       </Badge>
                       <Badge 
                         variant="outline"
                         className={`cursor-pointer justify-center py-2 ${sortBy === "topRated" ? "bg-[#B02E2B] border-[#B02E2B] text-white" : "text-neutral-400 border-neutral-800 hover:bg-neutral-900"}`}
                         onClick={() => setSortBy("topRated")}
                       >
-                        <Star className="w-3 h-3 mr-1" /> Top Rated
+                        <Star className="w-3 h-3 mr-1" />
+                        Top Rated
                       </Badge>
                   </div>
                 </div>
@@ -308,13 +366,15 @@ export default function AdvancedViralSearchPage() {
                 <div className="grid grid-cols-2 gap-2">
                   <div className="bg-neutral-900/50 p-2 rounded border border-neutral-800 flex flex-col items-center justify-center">
                     <div className="flex items-center gap-1.5 text-neutral-500 text-[10px] uppercase tracking-wider mb-1">
-                      <Eye className="w-3 h-3" /> Views
+                      <Eye className="w-3 h-3" />
+                      Views
                     </div>
                     <span className="text-white font-mono font-bold">{formatNumber(video.views)}</span>
                   </div>
                   <div className="bg-neutral-900/50 p-2 rounded border border-neutral-800 flex flex-col items-center justify-center">
                     <div className="flex items-center gap-1.5 text-neutral-500 text-[10px] uppercase tracking-wider mb-1">
-                      <Users className="w-3 h-3" /> Subs
+                      <Users className="w-3 h-3" />
+                      Subs
                     </div>
                     <span className="text-white font-mono font-bold">{formatNumber(video.subscribers)}</span>
                   </div>

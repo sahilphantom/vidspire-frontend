@@ -1,3 +1,4 @@
+// src/app/dashboard/comment-analyzer/page.tsx - Updated
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
@@ -29,8 +30,14 @@ import {
   Tooltip as RechartsTooltip,
 } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
-import { MultiStepLoader } from "@/components/ui/multi-step-loader"; // Import the loader
+import { MultiStepLoader } from "@/components/ui/multi-step-loader";
 import { useSearchParams } from "next/navigation";
+import { RateLimitIndicator } from "@/components/RateLimitIndicator";
+import { ToastContainer } from "@/components/RateLimitToast";
+import { analyzeSentiment, RateLimitError } from "@/lib/api";
+import { useRateLimit } from "@/hooks/useRateLimit";
+import { Toast, useToast } from "@/components/RateLimitToast";
+
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -117,6 +124,7 @@ class JobStorageManager {
   private readonly ACTIVE_KEY = "yt_analyzer_active_jobs";
   private readonly COMPLETED_KEY = "yt_analyzer_completed_jobs";
   private readonly HISTORY_KEY = "yt_analyzer_history";
+  
   getActiveJobs(): JobMetadata[] {
     try {
       const data = localStorage.getItem(this.ACTIVE_KEY);
@@ -301,17 +309,20 @@ const CustomTooltip = ({ active, payload }: any) => {
 export default function VideoAnalysisPage() {
   const params = useSearchParams();
   const jobId = params.get("jobId");
-  console.log("JOBID", jobId);
   const [videoUrl, setVideoUrl] = useState("");
   const [uiState, setUiState] = useState<UIState>({ type: "idle" });
   const [pendingJobs, setPendingJobs] = useState<JobMetadata[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(true);
 
+   const { rateLimitInfo, updateRateLimit } = useRateLimit("sentiment-analysis");
+  const { showError, showWarning, showSuccess, toasts, removeToast } = useToast();
+  
   const socketRef = useRef<Socket | null>(null);
   const currentJobIdRef = useRef<string | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pollingAttemptRef = useRef(0);
-
+  
+ 
   // --- INITIALIZATION ---
   useEffect(() => {
     jobStorage.cleanup();
@@ -321,12 +332,14 @@ export default function VideoAnalysisPage() {
       stopPolling();
     };
   }, []);
+  
   // Check for jobId in URL params and fetch existing analysis
   useEffect(() => {
     if (jobId) {
       fetchExistingJob(jobId);
     }
   }, [jobId]);
+  
   const checkForPendingJobs = () => {
     const active = jobStorage.getActiveJobs();
     if (active.length > 0) setPendingJobs(active);
@@ -360,11 +373,10 @@ export default function VideoAnalysisPage() {
     });
 
     socket.on("progress", (event: ProgressEvent) => {
-      // REAL-TIME TEXT UPDATE FROM SOCKET
       setUiState({
         type: "processing",
         progress: event.percentage,
-        message: event.message, // <--- Using message from backend
+        message: event.message,
       });
       jobStorage.updateActiveJob(jobId, {
         progress: event.percentage,
@@ -382,6 +394,7 @@ export default function VideoAnalysisPage() {
       setUiState({ type: "completed", result: data.result });
       jobStorage.moveToCompleted(jobId, data.result);
       socket.disconnect();
+      showSuccess("Analysis completed successfully!");
     });
 
     socket.on("connect_error", () => {
@@ -428,6 +441,7 @@ export default function VideoAnalysisPage() {
         setUiState({ type: "completed", result: status.returnvalue });
         jobStorage.moveToCompleted(jobId, status.returnvalue);
         stopPolling();
+        showSuccess("Analysis completed successfully!");
         return;
       } else if (status.state === "failed") {
         throw new Error(status.failedReason || "Job failed");
@@ -460,6 +474,7 @@ export default function VideoAnalysisPage() {
       setUiState({ type: "failed", error: err.message, retryable: true });
       jobStorage.moveToFailed(jobId, err.message);
       stopPolling();
+      showError(err.message);
     }
   };
 
@@ -526,47 +541,41 @@ export default function VideoAnalysisPage() {
         error: err.message || "Failed to load analysis",
         retryable: false,
       });
+      showError(err.message || "Failed to load analysis");
     }
   };
 
   const handleSubmit = async () => {
     if (!videoUrl.trim()) {
-      setUiState({
-        type: "failed",
-        error: "Please enter a YouTube URL",
-        retryable: false,
-      });
+      setUiState({ type: "failed", error: "Please enter a YouTube URL", retryable: false });
       return;
     }
 
-    setUiState({
-      type: "processing",
-      progress: 0,
-      message: "Initializing Analysis...",
-    });
+    // ✅ NEW: Check rate limit
+    if (rateLimitInfo.isLimited) {
+      showError("Daily limit reached! Come back tomorrow.");
+      return;
+    }
+
+    if (rateLimitInfo.remaining === 1) {
+      showWarning("This is your last free analysis today!");
+    }
+
+    setUiState({ type: "processing", progress: 0, message: "Initializing Analysis..." });
     setPendingJobs([]);
 
     try {
-      const response = await fetch(`${API_URL}/video/analyze`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ videoUrl }),
-      });
+      // ✅ NEW: Use API wrapper instead of fetch
+      const { data, headers } = await analyzeSentiment(videoUrl);
+      
+      // ✅ NEW: Update rate limit from headers
+      updateRateLimit(headers);
 
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.message || "Failed to start analysis");
-      }
-
-      const { jobId, videoId } = data.data;
+      const { jobId, videoId } = data;
       currentJobIdRef.current = jobId;
       jobStorage.addToHistory(videoUrl, videoId, jobId);
-
       jobStorage.addActiveJob({
-        jobId,
-        videoId,
-        videoUrl,
+        jobId, videoId, videoUrl,
         status: "active",
         submittedAt: Date.now(),
         lastUpdated: Date.now(),
@@ -574,7 +583,17 @@ export default function VideoAnalysisPage() {
       });
 
       connectToJob(jobId, videoId);
+      showSuccess("Analysis started successfully!");
     } catch (err: any) {
+      // ✅ NEW: Handle rate limit errors
+      if (err instanceof RateLimitError) {
+        updateRateLimit(new Headers({
+          'X-RateLimit-Limit': err.limit.toString(),
+          'X-RateLimit-Remaining': err.remaining.toString(),
+          'X-RateLimit-Reset': err.resetAt,
+        }));
+        showError(err.message);
+      }
       setUiState({ type: "failed", error: err.message, retryable: true });
     }
   };
@@ -588,11 +607,13 @@ export default function VideoAnalysisPage() {
       if (!status) {
         jobStorage.removeJob(job.jobId);
         setUiState({ type: "failed", error: "Job expired", retryable: false });
+        showError("Job expired");
         return;
       }
       if (status.state === "completed" && status.returnvalue) {
         jobStorage.moveToCompleted(job.jobId, status.returnvalue);
         setUiState({ type: "completed", result: status.returnvalue });
+        showSuccess("Analysis loaded successfully!");
       } else if (status.state === "failed") {
         jobStorage.moveToFailed(job.jobId, status.failedReason || "Failed");
         setUiState({
@@ -600,6 +621,7 @@ export default function VideoAnalysisPage() {
           error: status.failedReason || "Job failed",
           retryable: true,
         });
+        showError(status.failedReason || "Job failed");
       } else {
         setUiState({
           type: "processing",
@@ -610,12 +632,14 @@ export default function VideoAnalysisPage() {
       }
     } catch (err: any) {
       setUiState({ type: "failed", error: err.message, retryable: true });
+      showError(err.message);
     }
   };
 
   const dismissJob = (jobId: string) => {
     jobStorage.removeJob(jobId);
     setPendingJobs((prev) => prev.filter((j) => j.jobId !== jobId));
+    showSuccess("Job dismissed");
   };
 
   const handleReset = () => {
@@ -672,10 +696,26 @@ export default function VideoAnalysisPage() {
 
   return (
     <div className={isDarkMode ? "dark" : ""}>
+      <ToastContainer />
       <div
         className={`min-h-screen transition-colors duration-300 bg-gray-50 dark:bg-[#000000] text-neutral-900 dark:text-white p-4 sm:p-8 ${outfit.className}`}
       >
         <div className="max-w-7xl mx-auto">
+            {/* ✅ ADD TOAST CONTAINER */}
+          {toasts.map((toast) => (
+            <Toast
+              key={toast.id}
+              message={toast.message}
+              type={toast.type}
+              onClose={() => removeToast(toast.id)}
+            />
+          ))}
+          {/* Rate Limit Indicator */}
+          <RateLimitIndicator 
+            featureName="video_analysis" 
+            displayName="Video Analysis"
+          />
+          
           {/* TOP BAR */}
           <div className="flex justify-center items-center mb-8 border-b border-neutral-200 dark:border-neutral-800 pb-6">
             <div className="flex flex-col items-start ">
@@ -693,24 +733,38 @@ export default function VideoAnalysisPage() {
             </div>
           </div>
 
-          {/* INPUT SECTION */}
+           {/* ✅ ADD RATE LIMIT INDICATOR */}
           {uiState.type === "idle" && (
-            <div className="w-full max-w-2xl mx-auto mt-20 text-center">
+            <RateLimitIndicator 
+              featureName="sentiment-analysis" 
+              displayName="Sentiment Analysis"
+            />
+          )}
+
+           {/* ✅ UPDATE INPUT SECTION - Add disabled state */}
+          {uiState.type === "idle" && (
+            <div className="w-full max-w-2xl mx-auto mt-8 text-center">
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#B02E2B] to-[#902421] rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+                <div className="absolute -inset-1 bg-linear-to-r from-[#B02E2B] to-[#902421] rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
                 <div className="relative flex">
                   <input
                     type="text"
                     value={videoUrl}
                     onChange={(e) => setVideoUrl(e.target.value)}
                     placeholder="Paste YouTube Video URL..."
-                    className="w-full pl-6 pr-32 py-5 bg-white dark:bg-[#0f0f0f] border border-neutral-200 dark:border-neutral-800 rounded-xl text-neutral-900 dark:text-white focus:ring-1 focus:ring-[#B02E2B] focus:border-[#B02E2B] outline-none transition-all text-lg shadow-xl"
+                    disabled={rateLimitInfo.isLimited}
+                    className="w-full pl-6 pr-32 py-5 bg-white dark:bg-[#0f0f0f] border border-neutral-200 dark:border-neutral-800 rounded-xl text-neutral-900 dark:text-white focus:ring-1 focus:ring-[#B02E2B] focus:border-[#B02E2B] outline-none transition-all text-lg shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <button
                     onClick={handleSubmit}
-                    className="absolute right-2 top-2 bottom-2 px-8 bg-[#B02E2B] hover:bg-[#902421] text-white font-bold rounded-lg transition-all flex items-center gap-2"
+                    disabled={rateLimitInfo.isLimited}
+                    className={`absolute right-2 top-2 bottom-2 px-8 font-bold rounded-lg transition-all flex items-center gap-2 ${
+                      rateLimitInfo.isLimited 
+                        ? 'bg-neutral-700 text-neutral-400 cursor-not-allowed' 
+                        : 'bg-[#B02E2B] hover:bg-[#902421] text-white'
+                    }`}
                   >
-                    Analyze <ArrowRight className="w-5 h-5" />
+                    {rateLimitInfo.isLimited ? "Limit Reached" : <>Analyze <ArrowRight className="w-5 h-5" /></>}
                   </button>
                 </div>
               </div>

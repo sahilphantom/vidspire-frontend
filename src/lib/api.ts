@@ -1,4 +1,4 @@
-// src/lib/api.ts
+// src/lib/api.ts - Updated version
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 export class RateLimitError extends Error {
@@ -24,9 +24,13 @@ interface ApiResponse<T> {
   message?: string;
 }
 
+// Global rate limit store for tracking headers
+const rateLimitStore = new Map<string, Headers>();
+
 export async function apiRequest<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  featureName: string = 'default'
 ): Promise<{ data: T; headers: Headers }> {
   const url = `${API_BASE_URL}${endpoint}`;
 
@@ -40,6 +44,11 @@ export async function apiRequest<T>(
     });
 
     const responseData: ApiResponse<T> = await response.json();
+
+    // Store rate limit headers
+    if (response.headers.has('X-RateLimit-Remaining')) {
+      rateLimitStore.set(featureName, response.headers);
+    }
 
     // Handle rate limit (429)
     if (response.status === 429) {
@@ -79,8 +88,13 @@ export async function apiRequest<T>(
   }
 }
 
+// Helper to get rate limit headers for a feature
+export function getRateLimitHeaders(featureName: string): Headers | null {
+  return rateLimitStore.get(featureName) || null;
+}
+
 // ========================================
-// VIDSPIRE API FUNCTIONS
+// VIDSPIRE API FUNCTIONS WITH RATE LIMIT FEATURE NAMES
 // ========================================
 
 // 1. Video Sentiment Analysis
@@ -88,7 +102,7 @@ export async function analyzeSentiment(videoUrl: string) {
   return apiRequest('/api/video/analyze', {
     method: 'POST',
     body: JSON.stringify({ videoUrl }),
-  });
+  }, 'video_analysis');
 }
 
 // 2. Idea Validation
@@ -96,7 +110,7 @@ export async function validateIdea(idea: string, targetAudience: string, goal: s
   return apiRequest('/api/validate-idea', {
     method: 'POST',
     body: JSON.stringify({ idea, targetAudience, goal }),
-  });
+  }, 'idea_validation');
 }
 
 // 3. Advanced Topic Search
@@ -120,7 +134,7 @@ export async function searchTopicsAdvanced(
   
   return apiRequest(`/api/topics/search-advanced?${params.toString()}`, {
     method: 'GET',
-  });
+  }, 'viral_search');
 }
 
 // Status checks (not rate limited)

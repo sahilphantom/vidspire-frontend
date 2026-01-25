@@ -363,7 +363,7 @@ const FeaturesSection: React.FC = () => {
           />
           <FeatureCard
             title="Meet Ethan & The Future Arsenal"
-            description={`We are building the ultimate unfair advantage. Coming soon: Predictive Thumbnail Comparison (to guarantee clicks), Deep Video Forensics, and introducing "Ethan"—your personal AI agent who autonomously manages your channel strategy 24/7.`}
+            description={`We are building the ultimate unfair advantage. Coming soon: Deep Analysis, Shorts Analyzer, and introducing "Ethan"—your personal AI agent who autonomously manages your channel strategy 24/7.`}
             visual={<FutureArsenalVisual />}
             className="lg:col-span-2 group hover:border-[#B02E2B]/30"
             delay={0.5}
