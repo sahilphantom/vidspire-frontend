@@ -26,6 +26,8 @@ import Link from "next/link";
 import { Space_Grotesk, Outfit } from "next/font/google";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { UsageStatistics } from "@/src/components/UsageStatistics";
+import { WelcomeHero } from "@/src/components/WelcomeHero";
 
 // ✅ ANIMATION VARIANTS
 const containerVariants = {
@@ -409,6 +411,9 @@ export default function DashboardPage() {
           variants={itemVariants}
           className="text-sm font-semibold text-neutral-300 mb-4"
         >
+
+<WelcomeHero />
+
           Quick Access
         </motion.h2>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -453,6 +458,8 @@ export default function DashboardPage() {
           })}
         </div>
       </section>
+
+      <UsageStatistics />
 
       {/* Recent Analyses */}
       <RecentAnalysesSection />
