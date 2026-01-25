@@ -25,6 +25,8 @@ import Link from "next/link";
 import { Space_Grotesk, Outfit } from "next/font/google";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { UsageStatistics } from "@/src/components/UsageStatistics";
+import { WelcomeHero } from "@/src/components/WelcomeHero";
 
 // ✅ ANIMATION VARIANTS
 const containerVariants = {
@@ -115,29 +117,37 @@ function RecentAnalysesSection() {
       const promises = history.map(async (job) => {
         try {
           const response = await fetch(
-            `http://localhost:5000/api/video/status/${job.jobId}`
+            `http://localhost:5000/api/video/status/${job.jobId}`,
           );
           const data = await response.json();
 
           if (data.success) {
             return { jobId: job.jobId, status: data.status, isLoading: false };
           } else {
-            return { jobId: job.jobId, status: "failed" as const, isLoading: false };
+            return {
+              jobId: job.jobId,
+              status: "failed" as const,
+              isLoading: false,
+            };
           }
         } catch (error) {
-          return { jobId: job.jobId, status: "failed" as const, isLoading: false };
+          return {
+            jobId: job.jobId,
+            status: "failed" as const,
+            isLoading: false,
+          };
         }
       });
 
       const results = await Promise.all(promises);
-      
+
       setRecentJobs((prev) =>
         prev.map((j) => {
           const result = results.find((r) => r.jobId === j.jobId);
           return result ? { ...j, ...result } : j;
-        })
+        }),
       );
-      
+
       setIsInitialLoading(false);
     };
 
@@ -243,8 +253,8 @@ function RecentAnalysesSection() {
             No Recent Analyses
           </h3>
           <p className="text-sm text-gray-500">
-            Your analysis history will appear here once you start analyzing YouTube
-            videos.
+            Your analysis history will appear here once you start analyzing
+            YouTube videos.
           </p>
         </div>
       ) : (
@@ -386,94 +396,98 @@ const toolCards = [
 
 export default function DashboardPage() {
   return (
-    <div className={`min-h-screen bg-black ${spaceGrotesk.variable} ${outfit.variable}`}>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="container mx-auto px-4 py-8 max-w-7xl"
-      >
-        {/* Quick Access Cards */}
-        <motion.div variants={itemVariants} className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-[#B02E2B]" />
-            Quick Access
-          </h2>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {toolCards.map((tool) => {
-              const Icon = tool.icon;
-              return (
-                <Link key={tool.title} href={tool.href}>
-                  <motion.div
-                    variants={cardHoverVariants}
-                    initial="rest"
-                    whileHover="hover"
-                  >
-                    <Card
-                      className={`${tool.darkClass} transition-all duration-300 cursor-pointer h-full`}
-                    >
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <Icon className={`h-8 w-8 ${tool.iconColor} mb-2`} />
-                          <ArrowRight className="h-5 w-5 text-gray-500" />
-                        </div>
-                        <CardTitle className="text-white">
-                          {tool.title}
-                        </CardTitle>
-                        <CardDescription className="text-gray-400">
-                          {tool.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-[#B02E2B] hover:text-[#d6211e] hover:bg-[#B02E2B]/10"
-                        >
-                          Open
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Link>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        <RecentAnalysesSection />
-
-        {/* Coming Soon Section */}
-        <motion.div
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className={`max-w-7xl ${outfit.className} space-y-10 mx-auto pb-10`}
+    >
+      {/* Quick Access Cards */}
+      <section>
+        <motion.h2
           variants={itemVariants}
-          className="mt-8 bg-gradient-to-br from-[#0A0A0A] to-[#0F0505] rounded-xl p-6 border border-[#1F1F1F]"
+          className="text-sm font-semibold text-neutral-300 mb-4"
         >
-          <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-[#B02E2B]" />
-            Future Arsenal
-          </h2>
-          <p className="text-sm text-gray-400 mb-6">
-            We are building the ultimate unfair advantage. Stay tuned!
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {["Agent Ethan (AI Manager)", "Thumbnail Forensics", "Retention Spy"].map(
-              (item, i) => (
-                <div
-                  key={i}
-                  className="bg-[#0A0A0A] border border-dashed border-[#2A2A2A] rounded-lg p-4 flex items-center justify-between"
-                >
-                  <span className="text-gray-400 font-medium">{item}</span>
-                  <Badge className="bg-[#B02E2B]/10 text-[#B02E2B] border-[#B02E2B]/20">
-                    Soon
-                  </Badge>
-                </div>
-              )
-            )}
-          </div>
-        </motion.div>
+          <WelcomeHero />
+          Quick Access
+        </motion.h2>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {toolCards.map((tool, index) => {
+            const Icon = tool.icon;
+            return (
+              <motion.div
+                key={tool.title}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Link href={tool.href} className="block h-full">
+                  <Card
+                    className={`bg-gradient-to-br ${tool.darkClass} border h-full cursor-pointer transition-all duration-200`}
+                  >
+                    <CardHeader>
+                      <motion.div
+                        className="flex items-center"
+                        whileHover={{ rotate: 5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Icon className={`w-5 h-5 ${tool.iconColor}`} />
+                      </motion.div>
+                      <CardTitle className="text-sm font-semibold text-white mt-2">
+                        {tool.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-xs text-neutral-400 leading-relaxed">
+                        {tool.description}
+                      </p>
+                      <div className="mt-3 flex items-center text-xs text-neutral-500 group-hover:text-white transition-colors">
+                        Open <ArrowRight className="w-3 h-3 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      <UsageStatistics />
+
+      <RecentAnalysesSection />
+
+      {/* Coming Soon Section */}
+      <motion.div
+        variants={itemVariants}
+        className="mt-8 bg-gradient-to-br from-[#0A0A0A] to-[#0F0505] rounded-xl p-6 border border-[#1F1F1F]"
+      >
+        <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-[#B02E2B]" />
+          Future Arsenal
+        </h2>
+        <p className="text-sm text-gray-400 mb-6">
+          We are building the ultimate unfair advantage. Stay tuned!
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            "Agent Ethan (AI Manager)",
+            "Thumbnail Forensics",
+            "Retention Spy",
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="bg-[#0A0A0A] border border-dashed border-[#2A2A2A] rounded-lg p-4 flex items-center justify-between"
+            >
+              <span className="text-gray-400 font-medium">{item}</span>
+              <Badge className="bg-[#B02E2B]/10 text-[#B02E2B] border-[#B02E2B]/20">
+                Soon
+              </Badge>
+            </div>
+          ))}
+        </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
