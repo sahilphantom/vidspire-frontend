@@ -1,3 +1,5 @@
+import { JobData } from "../app/dashboard/comment-analyzer/page";
+
 // src/lib/api.ts - Updated version
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -99,7 +101,7 @@ export function getRateLimitHeaders(featureName: string): Headers | null {
 
 // 1. Video Sentiment Analysis
 export async function analyzeSentiment(videoUrl: string) {
-  return apiRequest('/api/video/analyze', {
+  return apiRequest<JobData>('/api/video/analyze', {
     method: 'POST',
     body: JSON.stringify({ videoUrl }),
   }, 'video_analysis');

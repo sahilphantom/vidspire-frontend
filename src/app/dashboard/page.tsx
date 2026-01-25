@@ -1,5 +1,4 @@
 "use client";
-
 import {
   MessageSquare,
   Search,
@@ -11,8 +10,8 @@ import {
   Eye,
   Sparkles,
   Loader2,
+  Clock,
 } from "lucide-react";
-
 import {
   Card,
   CardContent,
@@ -47,7 +46,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0.23, 1, 0.32, 1],
+      ease: [0.23, 1, 0.32, 1] as const,
     },
   },
 };
@@ -58,22 +57,18 @@ const cardHoverVariants = {
     scale: 1.02,
     transition: {
       duration: 0.2,
-      ease: "easeOut",
+      ease: "easeOut" as const,
     },
   },
 };
 
 // ✅ SKELETON LOADER COMPONENT
 const SkeletonCard = () => (
-  <div className="rounded-xl border overflow-hidden bg-[#0a0a0a] border-neutral-800 animate-pulse">
-    <div className="relative w-full aspect-video bg-neutral-900" />
+  <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded-lg overflow-hidden animate-pulse">
+    <div className="relative aspect-video bg-[#171717]" />
     <div className="p-4 space-y-3">
-      <div className="h-3 bg-neutral-800 rounded w-3/4" />
-      <div className="h-3 bg-neutral-800 rounded w-1/2" />
-      <div className="grid grid-cols-2 gap-3">
-        <div className="h-8 bg-neutral-800 rounded" />
-        <div className="h-8 bg-neutral-800 rounded" />
-      </div>
+      <div className="h-4 bg-[#171717] rounded w-3/4" />
+      <div className="h-3 bg-[#171717] rounded w-1/2" />
     </div>
   </div>
 );
@@ -82,12 +77,12 @@ const SkeletonCard = () => (
 function RecentAnalysesSection() {
   const [recentJobs, setRecentJobs] = useState<
     Array<{
-      videoUrl: string,
-      videoId: string,
-      jobId: string,
-      createdAt: number,
-      status?: "pending" | "processing" | "completed" | "failed",
-      isLoading?: boolean,
+      videoUrl: string;
+      videoId: string;
+      jobId: string;
+      createdAt: number;
+      status?: "pending" | "processing" | "completed" | "failed";
+      isLoading?: boolean;
     }>
   >([]);
   const [showAll, setShowAll] = useState(false);
@@ -109,7 +104,7 @@ function RecentAnalysesSection() {
       jobId: string;
       createdAt: number;
     }[] = getHistory();
-    
+
     if (history.length === 0) {
       setIsInitialLoading(false);
       return;
@@ -118,43 +113,62 @@ function RecentAnalysesSection() {
     setRecentJobs(history.map((job) => ({ ...job, isLoading: true })));
 
     // Fetch status for each job
-    Promise.all(
-      history.map(async (job) => {
+    const fetchStatuses = async () => {
+      const promises = history.map(async (job) => {
         try {
           const response = await fetch(
             `http://localhost:5000/api/video/status/${job.jobId}`,
           );
           const data = await response.json();
 
+          if (data.success) {
+            return { jobId: job.jobId, status: data.status, isLoading: false };
+          } else {
+            return {
+              jobId: job.jobId,
+              status: "failed" as const,
+              isLoading: false,
+            };
+          }
+        } catch (error) {
           return {
-            ...job,
-            status: data.success ? data.status : "failed",
+            jobId: job.jobId,
+            status: "failed" as const,
             isLoading: false,
           };
-        } catch (error) {
-          return { ...job, status: "failed" as const, isLoading: false };
         }
-      })
-    ).then((updatedJobs) => {
-      setRecentJobs(updatedJobs);
+      });
+
+      const results = await Promise.all(promises);
+
+      setRecentJobs((prev) =>
+        prev.map((j) => {
+          const result = results.find((r) => r.jobId === j.jobId);
+          return result ? { ...j, ...result } : j;
+        }),
+      );
+
       setIsInitialLoading(false);
-    });
+    };
+
+    fetchStatuses();
   }, []);
 
   if (isInitialLoading) {
     return (
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-neutral-300">
-            Recent Analyses
-          </h2>
+      <motion.div
+        variants={itemVariants}
+        className="bg-gradient-to-br from-[#0A0A0A] to-[#0F0505] rounded-xl p-6 border border-[#1F1F1F]"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-white">Recent Analyses</h2>
         </div>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <SkeletonCard key={i} />
           ))}
         </div>
-      </section>
+      </motion.div>
     );
   }
 
@@ -180,8 +194,8 @@ function RecentAnalysesSection() {
   const getStatusBadge = (job: (typeof recentJobs)[0]) => {
     if (job.isLoading) {
       return (
-        <Badge className="bg-neutral-800 text-neutral-400 text-[10px] h-5 font-mono">
-          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+        <Badge className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 gap-1.5">
+          <Loader2 className="h-3 w-3 animate-spin" />
           Checking...
         </Badge>
       );
@@ -190,20 +204,21 @@ function RecentAnalysesSection() {
     switch (job.status) {
       case "completed":
         return (
-          <Badge className="bg-green-900/30 text-green-400 border border-green-500/20 text-[10px] h-5 font-mono">
-            <CheckCircle className="w-3 h-3 mr-1" />
+          <Badge className="bg-green-500/10 text-green-500 border-green-500/20 gap-1.5">
+            <CheckCircle className="h-3 w-3" />
             Completed
           </Badge>
         );
       case "processing":
         return (
-          <Badge className="bg-yellow-900/30 text-yellow-400 border border-yellow-500/20 text-[10px] h-5 font-mono">
+          <Badge className="bg-blue-500/10 text-blue-500 border-blue-500/20 gap-1.5">
+            <Loader2 className="h-3 w-3 animate-spin" />
             Processing
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-red-900/30 text-red-400 border border-red-500/20 text-[10px] h-5 font-mono">
+          <Badge className="bg-red-500/10 text-red-500 border-red-500/20">
             Failed
           </Badge>
         );
@@ -215,140 +230,122 @@ function RecentAnalysesSection() {
   };
 
   return (
-    <motion.section
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+    <motion.div
+      variants={itemVariants}
+      className="bg-gradient-to-br from-[#0A0A0A] to-[#0F0505] rounded-xl p-6 border border-[#1F1F1F]"
     >
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold text-neutral-300">
-          Recent Analyses
-        </h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-white">Recent Analyses</h2>
         {recentJobs.length > 6 && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setShowAll(!showAll)}
             className="text-xs text-[#B02E2B] hover:text-[#d6211e] transition-colors font-medium"
           >
             {showAll ? "Show Less" : `See All (${recentJobs.length})`}
-          </motion.button>
+          </button>
         )}
       </div>
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {displayedJobs.map((job, index) => {
-          const isCompleted = job.status === "completed" && !job.isLoading;
-          const CardContent = (
-            <motion.div
-              variants={itemVariants}
-              whileHover={isCompleted ? "hover" : "rest"}
-              className={`
-                group rounded-xl border overflow-hidden transition-all duration-200
-                ${
-                  isCompleted
-                    ? "bg-[#0f0f0f] border-[#B02E2B]/30 hover:border-[#B02E2B] hover:shadow-lg hover:shadow-[#B02E2B]/10 cursor-pointer"
-                    : "bg-[#0a0a0a] border-neutral-800 opacity-60 cursor-not-allowed"
-                }
-              `}
-            >
-              {/* Thumbnail */}
-              <div className="relative w-full aspect-video bg-neutral-900 overflow-hidden">
-                <img
-                  src={getThumbnailUrl(job.videoId)}
-                  alt="Video thumbnail"
-                  className={`w-full h-full object-cover transition-transform duration-300 ${
-                    isCompleted ? "group-hover:scale-105" : ""
-                  }`}
-                  onError={(e) => {
-                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='360' fill='%23171717'%3E%3Crect width='480' height='360' fill='%23171717'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='14' fill='%23525252'%3ENo Thumbnail%3C/text%3E%3C/svg%3E";
-                  }}
-                />
-                
-                {/* Status Badge Overlay */}
-                <div className="absolute top-2 right-2">
-                  {getStatusBadge(job)}
-                </div>
+      {recentJobs.length === 0 ? (
+        <div className="text-center py-12 px-4 bg-[#0A0A0A] rounded-lg border border-dashed border-[#2A2A2A]">
+          <Eye className="h-12 w-12 text-gray-600 mx-auto mb-3" />
+          <h3 className="text-lg font-semibold text-gray-400 mb-1">
+            No Recent Analyses
+          </h3>
+          <p className="text-sm text-gray-500">
+            Your analysis history will appear here once you start analyzing
+            YouTube videos.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {displayedJobs.map((job, index) => {
+              const isCompleted = job.status === "completed" && !job.isLoading;
 
-               
-                {/* Completed Overlay Icon */}
-                {isCompleted && (
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="bg-[#B02E2B] rounded-full p-3">
-                      <ArrowRight className="w-5 h-5 text-white" />
+              const CardContent = (
+                <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded-lg overflow-hidden hover:border-[#B02E2B]/30 transition-all duration-300">
+                  {/* Thumbnail */}
+                  <div className="relative aspect-video bg-[#171717] overflow-hidden group">
+                    <img
+                      src={getThumbnailUrl(job.videoId)}
+                      alt="Video thumbnail"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='360' fill='%23171717'%3E%3Crect width='480' height='360' fill='%23171717'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='14' fill='%23525252'%3ENo Thumbnail%3C/text%3E%3C/svg%3E";
+                      }}
+                    />
+                    {/* Status Badge Overlay */}
+                    <div className="absolute top-2 right-2">
+                      {getStatusBadge(job)}
+                    </div>
+                    {/* Completed Overlay Icon */}
+                    {isCompleted && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Eye className="h-8 w-8 text-white" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info Section */}
+                  <div className="p-4 space-y-3">
+                    {/* URL */}
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Video URL</p>
+                      <p className="text-sm text-gray-300 truncate font-mono">
+                        {job.videoUrl}
+                      </p>
+                    </div>
+
+                    {/* Job ID and Time */}
+                    <div className="flex items-center justify-between text-xs">
+                      <div>
+                        <p className="text-gray-500">Job ID</p>
+                        <p className="text-gray-400 font-mono">
+                          {job.jobId.substring(0, 8)}...
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-gray-500">Created</p>
+                        <p className="text-gray-400 flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {formatDate(job.createdAt)}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Info Section */}
-              <div className="p-4 space-y-3">
-                {/* URL */}
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                    Video URL
-                  </p>
-                  <p
-                    className={`text-xs font-mono truncate ${
-                      isCompleted
-                        ? "text-neutral-300 group-hover:text-white"
-                        : "text-neutral-600"
-                    }`}
-                  >
-                    {job.videoUrl}
-                  </p>
                 </div>
+              );
 
-                {/* Job ID and Time */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                      Job ID
-                    </p>
-                    <p className="text-xs font-mono text-neutral-400 truncate">
-                      {job.jobId.substring(0, 8)}...
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                      Created
-                    </p>
-                    <p className="text-xs font-mono text-neutral-400">
-                      {formatDate(job.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          );
+              return isCompleted ? (
+                <Link
+                  key={job.jobId}
+                  href={`/dashboard/comment-analyzer?jobId=${job.jobId}`}
+                  className="block"
+                >
+                  {CardContent}
+                </Link>
+              ) : (
+                <div key={job.jobId}>{CardContent}</div>
+              );
+            })}
+          </div>
 
-          return isCompleted ? (
-            <Link
-              key={job.jobId}
-              href={`/dashboard/comment-analyzer?jobId=${job.jobId}`}
-            >
-              {CardContent}
-            </Link>
-          ) : (
-            <div key={job.jobId}>{CardContent}</div>
-          );
-        })}
-      </div>
-
-      {/* Show More Button (Mobile-friendly alternative) */}
-      {recentJobs.length > 6 && !showAll && (
-        <div className="mt-4 text-center lg:hidden">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowAll(true)}
-            className="text-sm text-[#B02E2B] hover:text-[#d6211e] transition-colors font-medium"
-          >
-            Load More ({recentJobs.length - 6} more)
-          </motion.button>
-        </div>
+          {/* Show More Button (Mobile-friendly alternative) */}
+          {recentJobs.length > 6 && !showAll && (
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setShowAll(true)}
+                className="text-sm text-[#B02E2B] hover:text-[#d6211e] transition-colors font-medium"
+              >
+                Load More ({recentJobs.length - 6} more)
+              </button>
+            </div>
+          )}
+        </>
       )}
-    </motion.section>
+    </motion.div>
   );
 }
 
@@ -411,9 +408,7 @@ export default function DashboardPage() {
           variants={itemVariants}
           className="text-sm font-semibold text-neutral-300 mb-4"
         >
-
-<WelcomeHero />
-
+          <WelcomeHero />
           Quick Access
         </motion.h2>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -461,47 +456,38 @@ export default function DashboardPage() {
 
       <UsageStatistics />
 
-      {/* Recent Analyses */}
       <RecentAnalysesSection />
-    
+
       {/* Coming Soon Section */}
-      <motion.section variants={itemVariants}>
-        <h2 className="text-sm font-bold text-neutral-200 mb-4">
+      <motion.div
+        variants={itemVariants}
+        className="mt-8 bg-gradient-to-br from-[#0A0A0A] to-[#0F0505] rounded-xl p-6 border border-[#1F1F1F]"
+      >
+        <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-[#B02E2B]" />
           Future Arsenal
         </h2>
-        <Card className="bg-[#080808] border-neutral-800">
-          <CardContent className="p-6">
-            <p className="text-sm mb-6 text-neutral-400">
-              We are building the ultimate unfair advantage. Stay tuned!
-            </p>
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-              {[
-                "Deep Analysis",
-                "Shorts Analyzer",
-                "Agent Ethan (AI Manager)",
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02 }}
-                  className="h-12 rounded-md border border-neutral-800 bg-[#0f0f0f] flex items-center px-4 justify-between opacity-60"
-                >
-                  <div className="flex items-center gap-3">
-                    <Eye className="w-4 h-4 text-neutral-500" />
-                    <span className="text-sm text-neutral-400">{item}</span>
-                  </div>
-                  <Badge
-                    variant="secondary"
-                    className="bg-neutral-800 text-neutral-500 text-[10px] h-5"
-                  >
-                    Soon
-                  </Badge>
-                </motion.div>
-              ))}
+        <p className="text-sm text-gray-400 mb-6">
+          We are building the ultimate unfair advantage. Stay tuned!
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            "Agent Ethan (AI Manager)",
+            "Thumbnail Forensics",
+            "Retention Spy",
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="bg-[#0A0A0A] border border-dashed border-[#2A2A2A] rounded-lg p-4 flex items-center justify-between"
+            >
+              <span className="text-gray-400 font-medium">{item}</span>
+              <Badge className="bg-[#B02E2B]/10 text-[#B02E2B] border-[#B02E2B]/20">
+                Soon
+              </Badge>
             </div>
-          </CardContent>
-        </Card>
-      </motion.section>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
