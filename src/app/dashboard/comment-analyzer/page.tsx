@@ -80,6 +80,40 @@ interface AnalysisResult {
     percentage: number;
     triggers: string[];
   }>;
+  patterns: {
+    positive_patterns: Array<{
+      theme: string;
+      mention_count: number;
+      keywords: string[];
+    }>;
+    negative_patterns: Array<{
+      theme: string;
+      mention_count: number;
+      keywords: string[];
+    }>;
+    neutral_patterns: Array<{
+      theme: string;
+      mention_count: number;
+      keywords: string[];
+    }>;
+  };
+  wantMore: {
+    content_requests: Array<{
+      request_type: string;
+      count: number;
+      examples: string[];
+    }>;
+    expansion_requests: Array<{
+      timestamp_or_topic: string;
+      count: number;
+      examples: string[];
+    }>;
+    missing_topics: Array<{
+      topic: string;
+      question_count: number;
+      examples: string[];
+    }>;
+  };
   totalProcessed: number;
   hasTranscript: boolean;
   processingTime: string;
@@ -273,6 +307,402 @@ const ExpandableCard = ({
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+};
+// ========================================
+// WANT MORE COMPONENT
+// ========================================
+
+interface WantMoreProps {
+  wantMore: {
+    content_requests: Array<{
+      request_type: string;
+      count: number;
+      examples: string[];
+    }>;
+    expansion_requests: Array<{
+      timestamp_or_topic: string;
+      count: number;
+      examples: string[];
+    }>;
+    missing_topics: Array<{
+      topic: string;
+      question_count: number;
+      examples: string[];
+    }>;
+  };
+}
+
+const WantMoreSection: React.FC<WantMoreProps> = ({ wantMore }) => {
+  const totalRequests =
+    wantMore.content_requests.length +
+    wantMore.expansion_requests.length +
+    wantMore.missing_topics.length;
+
+  if (totalRequests === 0) return null;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-2">
+        <MessageSquare className="w-6 h-6 text-purple-500" />
+        <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">
+          What Viewers Want More
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        {/* Content Requests */}
+        {wantMore.content_requests.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+              <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
+                Content Requests
+              </h3>
+              <span className="text-xs text-neutral-500">
+                ({wantMore.content_requests.length})
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {wantMore.content_requests.map((request, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white dark:bg-[#0f0f0f] border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 relative overflow-hidden group hover:border-blue-500/50 transition-all"
+                >
+                  <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />
+
+                  <div className="pl-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight flex-1">
+                        {request.request_type}
+                      </h4>
+                      <span className="text-xs font-mono px-2 py-1 rounded bg-blue-900/20 text-blue-400 border border-blue-500/20 whitespace-nowrap">
+                        {request.count} requests
+                      </span>
+                    </div>
+
+                    <ExpandableCard
+                      title={
+                        <span className="text-xs text-neutral-500 font-mono">
+                          EXAMPLES ({request.examples.length})
+                        </span>
+                      }
+                    >
+                      <div className="space-y-2 mt-2">
+                        {request.examples.map((example, eidx) => (
+                          <div key={eidx} className="flex gap-2">
+                            <div className="w-1 h-auto bg-blue-500/30 rounded-full flex-shrink-0 mt-1"></div>
+                            <p className="text-xs text-neutral-600 dark:text-neutral-400 italic">
+                              "{example}"
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </ExpandableCard>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Expansion Requests */}
+        {wantMore.expansion_requests.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+              <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
+                Topics to Expand
+              </h3>
+              <span className="text-xs text-neutral-500">
+                ({wantMore.expansion_requests.length})
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {wantMore.expansion_requests.map((request, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white dark:bg-[#0f0f0f] border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 relative overflow-hidden group hover:border-orange-500/50 transition-all"
+                >
+                  <div className="absolute top-0 left-0 w-1 h-full bg-orange-500" />
+
+                  <div className="pl-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight flex-1">
+                        {request.timestamp_or_topic}
+                      </h4>
+                      <span className="text-xs font-mono px-2 py-1 rounded bg-orange-900/20 text-orange-400 border border-orange-500/20 whitespace-nowrap">
+                        {request.count} requests
+                      </span>
+                    </div>
+
+                    <ExpandableCard
+                      title={
+                        <span className="text-xs text-neutral-500 font-mono">
+                          EXAMPLES ({request.examples.length})
+                        </span>
+                      }
+                    >
+                      <div className="space-y-2 mt-2">
+                        {request.examples.map((example, eidx) => (
+                          <div key={eidx} className="flex gap-2">
+                            <div className="w-1 h-auto bg-orange-500/30 rounded-full flex-shrink-0 mt-1"></div>
+                            <p className="text-xs text-neutral-600 dark:text-neutral-400 italic">
+                              "{example}"
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </ExpandableCard>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Missing Topics */}
+        {wantMore.missing_topics.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+              <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
+                Missing Topics
+              </h3>
+              <span className="text-xs text-neutral-500">
+                ({wantMore.missing_topics.length})
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {wantMore.missing_topics.map((topic, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white dark:bg-[#0f0f0f] border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 relative overflow-hidden group hover:border-purple-500/50 transition-all"
+                >
+                  <div className="absolute top-0 left-0 w-1 h-full bg-purple-500" />
+
+                  <div className="pl-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white leading-tight flex-1">
+                        {topic.topic}
+                      </h4>
+                      <span className="text-xs font-mono px-2 py-1 rounded bg-purple-900/20 text-purple-400 border border-purple-500/20 whitespace-nowrap">
+                        {topic.question_count} questions
+                      </span>
+                    </div>
+
+                    <ExpandableCard
+                      title={
+                        <span className="text-xs text-neutral-500 font-mono">
+                          EXAMPLES ({topic.examples.length})
+                        </span>
+                      }
+                    >
+                      <div className="space-y-2 mt-2">
+                        {topic.examples.map((example, eidx) => (
+                          <div key={eidx} className="flex gap-2">
+                            <div className="w-1 h-auto bg-purple-500/30 rounded-full flex-shrink-0 mt-1"></div>
+                            <p className="text-xs text-neutral-600 dark:text-neutral-400 italic">
+                              "{example}"
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </ExpandableCard>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ========================================
+// PATTERNS COMPONENT (REDESIGNED)
+// ========================================
+
+interface PatternsProps {
+  patterns: {
+    positive_patterns: Array<{
+      theme: string;
+      mention_count: number;
+      keywords: string[];
+    }>;
+    negative_patterns: Array<{
+      theme: string;
+      mention_count: number;
+      keywords: string[];
+    }>;
+    neutral_patterns: Array<{
+      theme: string;
+      mention_count: number;
+      keywords: string[];
+    }>;
+  };
+}
+
+const PatternsSection: React.FC<PatternsProps> = ({ patterns }) => {
+  const [activeTab, setActiveTab] = useState<
+    "positive" | "negative" | "neutral"
+  >("positive");
+
+  const getTabData = () => {
+    switch (activeTab) {
+      case "positive":
+        return {
+          data: patterns.positive_patterns,
+          icon: "✨",
+          gradient: "from-green-500/10 to-green-600/5",
+          borderColor: "border-green-500/30",
+          hoverBorder: "hover:border-green-500",
+          accentColor: "bg-green-500",
+        };
+      case "negative":
+        return {
+          data: patterns.negative_patterns,
+          icon: "⚠️",
+          gradient: "from-red-500/10 to-red-600/5",
+          borderColor: "border-red-500/30",
+          hoverBorder: "hover:border-red-500",
+          accentColor: "bg-red-500",
+        };
+      case "neutral":
+        return {
+          data: patterns.neutral_patterns,
+          icon: "📊",
+          gradient: "from-neutral-500/10 to-neutral-600/5",
+          borderColor: "border-neutral-500/30",
+          hoverBorder: "hover:border-neutral-500",
+          accentColor: "bg-neutral-500",
+        };
+    }
+  };
+
+  const { data, icon, gradient, borderColor, hoverBorder, accentColor } =
+    getTabData();
+
+  if (!data || data.length === 0) return null;
+
+  return (
+    <div className="bg-[#0f0f0f] border border-neutral-800 rounded-xl p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <BarChart3 className="w-5 h-5 text-[#B02E2B]" />
+          Comment Patterns
+        </h3>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+        <button
+          onClick={() => setActiveTab("positive")}
+          className={`
+            px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all flex items-center gap-2
+            ${
+              activeTab === "positive"
+                ? "bg-green-900/30 text-green-400 border border-green-500/30"
+                : "bg-neutral-900 text-neutral-500 border border-neutral-800 hover:text-green-400 hover:border-green-500/20"
+            }
+          `}
+        >
+          ✨ Positive
+          <span className="text-xs bg-green-500/20 px-1.5 py-0.5 rounded">
+            {patterns.positive_patterns.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("negative")}
+          className={`
+            px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all flex items-center gap-2
+            ${
+              activeTab === "negative"
+                ? "bg-red-900/30 text-red-400 border border-red-500/30"
+                : "bg-neutral-900 text-neutral-500 border border-neutral-800 hover:text-red-400 hover:border-red-500/20"
+            }
+          `}
+        >
+          ⚠️ Negative
+          <span className="text-xs bg-red-500/20 px-1.5 py-0.5 rounded">
+            {patterns.negative_patterns.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("neutral")}
+          className={`
+            px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all flex items-center gap-2
+            ${
+              activeTab === "neutral"
+                ? "bg-neutral-800 text-neutral-300 border border-neutral-600/30"
+                : "bg-neutral-900 text-neutral-500 border border-neutral-800 hover:text-neutral-300 hover:border-neutral-600/20"
+            }
+          `}
+        >
+          📊 Neutral
+          <span className="text-xs bg-neutral-600/20 px-1.5 py-0.5 rounded">
+            {patterns.neutral_patterns.length}
+          </span>
+        </button>
+      </div>
+
+      {/* Pattern Cards - Scrollable on mobile, grid on desktop */}
+      <div className="space-y-3 max-h-[600px] overflow-y-auto custom-scrollbar scrollbar-thumb-neutral-700 scrollbar-track-neutral-900 pr-2">
+        {data.map((pattern, idx) => (
+          <div
+            key={idx}
+            className={`
+              relative bg-gradient-to-br ${gradient} backdrop-blur-sm
+              border ${borderColor} ${hoverBorder}
+              rounded-lg p-4 transition-all duration-200
+              hover:shadow-lg hover:shadow-[#B02E2B]/5
+            `}
+          >
+            {/* Left accent line */}
+            <div
+              className={`absolute left-0 top-0 bottom-0 w-1 ${accentColor} rounded-l-lg`}
+            />
+
+            <div className="pl-3">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <h4 className="text-sm font-bold text-white leading-tight flex-1">
+                  <span className="mr-2">{icon}</span>
+                  {pattern.theme}
+                </h4>
+                <span className="text-[10px] font-mono px-2 py-1 rounded bg-neutral-900/50 text-neutral-400 border border-neutral-700/50 whitespace-nowrap">
+                  {pattern.mention_count}
+                </span>
+              </div>
+
+              {/* Keywords */}
+              <div className="flex flex-wrap gap-1.5">
+                {pattern.keywords.slice(0, 8).map((keyword, kidx) => (
+                  <span
+                    key={kidx}
+                    className="text-[11px] px-2 py-1 rounded bg-neutral-900/80 text-neutral-300 border border-neutral-700/50 font-mono hover:bg-neutral-800 transition-colors"
+                  >
+                    {keyword}
+                  </span>
+                ))}
+                {pattern.keywords.length > 8 && (
+                  <span className="text-[11px] px-2 py-1 text-neutral-500 font-mono">
+                    +{pattern.keywords.length - 8} more
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -473,7 +903,7 @@ export default function VideoAnalysisPage() {
     try {
       const response = await fetch(`${API_URL}/video/${jobId}`);
       const data = await response.json();
-
+      console.log(" full JSON data : ", JSON.stringify(data, null, 2));
       if (!data.success) {
         throw new Error(data.message || "Failed to fetch job data");
       }
@@ -880,6 +1310,9 @@ export default function VideoAnalysisPage() {
                       ))}
                     </div>
                   </div>
+                  {uiState.result.patterns && (
+                    <PatternsSection patterns={uiState.result.patterns} />
+                  )}
                 </div>
 
                 {/* RIGHT COLUMN: INSIGHTS */}
@@ -999,6 +1432,10 @@ export default function VideoAnalysisPage() {
                       ))}
                     </div>
                   </div>
+
+                  {uiState.result.wantMore && (
+                    <WantMoreSection wantMore={uiState.result.wantMore} />
+                  )}
                 </div>
               </div>
             </motion.div>

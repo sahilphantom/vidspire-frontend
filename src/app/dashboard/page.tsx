@@ -10,6 +10,7 @@ import {
   Zap,
   Eye,
   Sparkles,
+  Clock,
 } from "lucide-react";
 
 import {
@@ -24,16 +25,17 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Space_Grotesk, Outfit } from "next/font/google";
 import { useEffect, useState } from "react";
-// Recent Analyses Component
+
+
 function RecentAnalysesSection() {
   const [recentJobs, setRecentJobs] = useState<
     Array<{
-      videoUrl: string,
-      videoId: string,
-      jobId: string,
-      createdAt: number,
-      status?: "pending" | "processing" | "completed" | "failed",
-      isLoading?: boolean,
+      videoUrl: string;
+      videoId: string;
+      jobId: string;
+      createdAt: number;
+      status?: "pending" | "processing" | "completed" | "failed";
+      isLoading?: boolean;
     }>
   >([]);
   const [showAll, setShowAll] = useState(false);
@@ -54,7 +56,7 @@ function RecentAnalysesSection() {
       jobId: string;
       createdAt: number;
     }[] = getHistory();
-    
+
     setRecentJobs(history.map((job) => ({ ...job, isLoading: true })));
 
     // Fetch status for each job
@@ -94,8 +96,6 @@ function RecentAnalysesSection() {
     });
   }, []);
 
-  if (recentJobs.length === 0) return null;
-
   const displayedJobs = showAll ? recentJobs : recentJobs.slice(0, 6);
 
   const formatDate = (timestamp: number) => {
@@ -116,31 +116,31 @@ function RecentAnalysesSection() {
   const getStatusBadge = (job: (typeof recentJobs)[0]) => {
     if (job.isLoading) {
       return (
-        <Badge className="bg-neutral-800 text-neutral-400 text-[10px] h-5 font-mono">
+        <span className="bg-neutral-800 text-neutral-400 text-[10px] h-5 font-mono px-2 py-1 rounded-md inline-flex items-center">
           Checking...
-        </Badge>
+        </span>
       );
     }
 
     switch (job.status) {
       case "completed":
         return (
-          <Badge className="bg-green-900/30 text-green-400 border border-green-500/20 text-[10px] h-5 font-mono">
+          <span className="bg-green-900/30 text-green-400 border border-green-500/20 text-[10px] h-5 font-mono px-2 py-1 rounded-md inline-flex items-center">
             <CheckCircle className="w-3 h-3 mr-1" />
             Completed
-          </Badge>
+          </span>
         );
       case "processing":
         return (
-          <Badge className="bg-yellow-900/30 text-yellow-400 border border-yellow-500/20 text-[10px] h-5 font-mono">
+          <span className="bg-yellow-900/30 text-yellow-400 border border-yellow-500/20 text-[10px] h-5 font-mono px-2 py-1 rounded-md inline-flex items-center">
             Processing
-          </Badge>
+          </span>
         );
       default:
         return (
-          <Badge className="bg-red-900/30 text-red-400 border border-red-500/20 text-[10px] h-5 font-mono">
+          <span className="bg-red-900/30 text-red-400 border border-red-500/20 text-[10px] h-5 font-mono px-2 py-1 rounded-md inline-flex items-center">
             Failed
-          </Badge>
+          </span>
         );
     }
   };
@@ -165,112 +165,135 @@ function RecentAnalysesSection() {
         )}
       </div>
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {displayedJobs.map((job) => {
-          const isCompleted = job.status === "completed" && !job.isLoading;
-          const CardContent = (
-            <div
-              className={`
-                group rounded-xl border overflow-hidden transition-all duration-200
-                ${
-                  isCompleted
-                    ? "bg-[#0f0f0f] border-[#B02E2B]/30 hover:border-[#B02E2B] hover:shadow-lg hover:shadow-[#B02E2B]/10 cursor-pointer"
-                    : "bg-[#0a0a0a] border-neutral-800 opacity-60 cursor-not-allowed"
-                }
-              `}
-            >
-              {/* Thumbnail */}
-              <div className="relative w-full aspect-video bg-neutral-900 overflow-hidden">
-                <img
-                  src={getThumbnailUrl(job.videoId)}
-                  alt="Video thumbnail"
-                  className={`w-full h-full object-cover transition-transform duration-300 ${
-                    isCompleted ? "group-hover:scale-105" : ""
-                  }`}
-                  onError={(e) => {
-                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='360' fill='%23171717'%3E%3Crect width='480' height='360' fill='%23171717'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='14' fill='%23525252'%3ENo Thumbnail%3C/text%3E%3C/svg%3E";
-                  }}
-                />
-                
-                {/* Status Badge Overlay */}
-                <div className="absolute top-2 right-2">
-                  {getStatusBadge(job)}
-                </div>
+      {recentJobs.length === 0 ? (
+        <div className="rounded-xl border border-neutral-800 bg-[#0a0a0a] p-12 text-center">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="rounded-full bg-neutral-900 p-4">
+              <Clock className="w-8 h-8 text-neutral-600" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold text-neutral-300">
+                No Recent Analyses
+              </h3>
+              <p className="text-sm text-neutral-500 max-w-md">
+                Your analysis history will appear here once you start analyzing
+                YouTube videos.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {displayedJobs.map((job) => {
+              const isCompleted = job.status === "completed" && !job.isLoading;
+              const CardContent = (
+                <div
+                  className={`
+                    group rounded-xl border overflow-hidden transition-all duration-200
+                    ${
+                      isCompleted
+                        ? "bg-[#0f0f0f] border-[#B02E2B]/30 hover:border-[#B02E2B] hover:shadow-lg hover:shadow-[#B02E2B]/10 cursor-pointer"
+                        : "bg-[#0a0a0a] border-neutral-800 opacity-60 cursor-not-allowed"
+                    }
+                  `}
+                >
+                  {/* Thumbnail */}
+                  <div className="relative w-full aspect-video bg-neutral-900 overflow-hidden">
+                    <img
+                      src={getThumbnailUrl(job.videoId)}
+                      alt="Video thumbnail"
+                      className={`w-full h-full object-cover transition-transform duration-300 ${
+                        isCompleted ? "group-hover:scale-105" : ""
+                      }`}
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='360' fill='%23171717'%3E%3Crect width='480' height='360' fill='%23171717'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='14' fill='%23525252'%3ENo Thumbnail%3C/text%3E%3C/svg%3E";
+                      }}
+                    />
 
-                {/* Completed Overlay Icon */}
-                {isCompleted && (
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="bg-[#B02E2B] rounded-full p-3">
-                      <ArrowRight className="w-5 h-5 text-white" />
+                    {/* Status Badge Overlay */}
+                    <div className="absolute top-2 right-2">
+                      {getStatusBadge(job)}
+                    </div>
+
+                    {/* Completed Overlay Icon */}
+                    {isCompleted && (
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="bg-[#B02E2B] rounded-full p-3">
+                          <ArrowRight className="w-5 h-5 text-white" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info Section */}
+                  <div className="p-4 space-y-3">
+                    {/* URL */}
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                        Video URL
+                      </p>
+                      <p
+                        className={`text-xs font-mono truncate ${
+                          isCompleted
+                            ? "text-neutral-300 group-hover:text-white"
+                            : "text-neutral-600"
+                        }`}
+                      >
+                        {job.videoUrl}
+                      </p>
+                    </div>
+
+                    {/* Job ID and Time */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                          Job ID
+                        </p>
+                        <p className="text-xs font-mono text-neutral-400 truncate">
+                          {job.jobId.substring(0, 8)}...
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                          Created
+                        </p>
+                        <p className="text-xs font-mono text-neutral-400">
+                          {formatDate(job.createdAt)}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Info Section */}
-              <div className="p-4 space-y-3">
-                {/* URL */}
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                    Video URL
-                  </p>
-                  <p
-                    className={`text-xs font-mono truncate ${
-                      isCompleted
-                        ? "text-neutral-300 group-hover:text-white"
-                        : "text-neutral-600"
-                    }`}
-                  >
-                    {job.videoUrl}
-                  </p>
                 </div>
+              );
 
-                {/* Job ID and Time */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                      Job ID
-                    </p>
-                    <p className="text-xs font-mono text-neutral-400 truncate">
-                      {job.jobId.substring(0, 8)}...
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                      Created
-                    </p>
-                    <p className="text-xs font-mono text-neutral-400">
-                      {formatDate(job.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              return isCompleted ? (
+                <a
+                  key={job.jobId}
+                  href={`/dashboard/comment-analyzer?jobId=${job.jobId}`}
+                  className="block"
+                >
+                  {CardContent}
+                </a>
+              ) : (
+                <div key={job.jobId}>{CardContent}</div>
+              );
+            })}
+          </div>
+
+          {/* Show More Button (Mobile-friendly alternative) */}
+          {recentJobs.length > 6 && !showAll && (
+            <div className="mt-4 text-center lg:hidden">
+              <button
+                onClick={() => setShowAll(true)}
+                className="text-sm text-[#B02E2B] hover:text-[#d6211e] transition-colors font-medium"
+              >
+                Load More ({recentJobs.length - 6} more)
+              </button>
             </div>
-          );
-
-          return isCompleted ? (
-            <Link
-              key={job.jobId}
-              href={`/dashboard/comment-analyzer?jobId=${job.jobId}`}
-            >
-              {CardContent}
-            </Link>
-          ) : (
-            <div key={job.jobId}>{CardContent}</div>
-          );
-        })}
-      </div>
-
-      {/* Show More Button (Mobile-friendly alternative) */}
-      {recentJobs.length > 6 && !showAll && (
-        <div className="mt-4 text-center lg:hidden">
-          <button
-            onClick={() => setShowAll(true)}
-            className="text-sm text-[#B02E2B] hover:text-[#d6211e] transition-colors font-medium"
-          >
-            Load More ({recentJobs.length - 6} more)
-          </button>
-        </div>
+          )}
+        </>
       )}
     </section>
   );
@@ -363,7 +386,7 @@ export default function DashboardPage() {
 
       {/* Removed "Recent Analyses" Section as requested */}
       <RecentAnalysesSection />
-    
+
       {/* Coming Soon Section */}
       <section>
         <h2 className="text-sm font-bold text-neutral-200 mb-4">
